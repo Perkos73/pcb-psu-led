@@ -1,0 +1,158 @@
+name: KiCad checks
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/kicad-check.yml"
+      - "pcb-psu-led.kicad_pro"
+      - "pcb-psu-led.kicad_sch"
+      - "pcb-psu-led.kicad_pcb"
+      - "symbols.kicad_sym"
+      - "sym-lib-table"
+      - "fp-lib-table"
+      - "footprints.pretty/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kicad-check-main
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare reports directory
+        shell: bash
+        run: |
+          set -eu
+          mkdir -p reports
+          rm -f reports/erc.rpt
+          rm -f reports/erc-console.log
+          rm -f reports/drc.rpt
+          rm -f reports/drc-console.log
+          rm -f reports/environment.log
+
+      - name: Record environment
+        shell: bash
+        run: |
+          set -eu
+          {
+            echo "PWD: $PWD"
+            echo
+            echo "Repository files:"
+            find . -maxdepth 3 -type f | sort
+            echo
+            echo "Docker version:"
+            docker --version
+            echo
+            echo "KiCad version:"
+            docker run --rm kicad/kicad:9.0 kicad-cli version
+          } > reports/environment.log 2>&1
+
+          cat reports/environment.log
+
+      - name: Run ERC
+        id: erc
+        shell: bash
+        run: |
+          set +e
+
+          if [ ! -f pcb-psu-led.kicad_sch ]; then
+            echo "SKIPPED: pcb-psu-led.kicad_sch does not exist." > reports/erc-console.log
+            cp reports/erc-console.log reports/erc.rpt
+            echo "code=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          docker run --rm             --user "$(id -u):$(id -g)"             --volume "$GITHUB_WORKSPACE:/work"             --workdir /work             kicad/kicad:9.0             kicad-cli sch erc             --severity-all             --exit-code-violations             --output reports/erc.rpt             pcb-psu-led.kicad_sch             > reports/erc-console.log 2>&1
+
+          code=$?
+          echo "exit_code=$code" >> reports/erc-console.log
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+
+          if [ ! -f reports/erc.rpt ]; then
+            {
+              echo "ERC REPORT WAS NOT CREATED"
+              echo
+              cat reports/erc-console.log
+            } > reports/erc.rpt
+          fi
+
+          cat reports/erc-console.log
+          exit 0
+
+      - name: Run DRC
+        id: drc
+        shell: bash
+        run: |
+          set +e
+
+          if [ ! -f pcb-psu-led.kicad_pcb ]; then
+            echo "SKIPPED: pcb-psu-led.kicad_pcb does not exist." > reports/drc-console.log
+            cp reports/drc-console.log reports/drc.rpt
+            echo "code=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          docker run --rm             --user "$(id -u):$(id -g)"             --volume "$GITHUB_WORKSPACE:/work"             --workdir /work             kicad/kicad:9.0             kicad-cli pcb drc             --severity-all             --exit-code-violations             --schematic-parity             --output reports/drc.rpt             pcb-psu-led.kicad_pcb             > reports/drc-console.log 2>&1
+
+          code=$?
+          echo "exit_code=$code" >> reports/drc-console.log
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+
+          if [ ! -f reports/drc.rpt ]; then
+            {
+              echo "DRC REPORT WAS NOT CREATED"
+              echo
+              cat reports/drc-console.log
+            } > reports/drc.rpt
+          fi
+
+          cat reports/drc-console.log
+          exit 0
+
+      - name: Save reports in repository
+        shell: bash
+        run: |
+          set -eu
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add reports/environment.log
+          git add reports/erc.rpt
+          git add reports/erc-console.log
+          git add reports/drc.rpt
+          git add reports/drc-console.log
+
+          if git diff --cached --quiet; then
+            echo "Reports did not change."
+          else
+            git commit -m "Update KiCad validation reports"
+            git push
+          fi
+
+      - name: Final result
+        shell: bash
+        run: |
+          erc_code="${{ steps.erc.outputs.code }}"
+          drc_code="${{ steps.drc.outputs.code }}"
+
+          echo "ERC exit code: $erc_code"
+          echo "DRC exit code: $drc_code"
+          echo "Reports are available in the reports directory."
+
+          if [ "$erc_code" != "0" ] || [ "$drc_code" != "0" ]; then
+            exit 1
+          fi
