@@ -13,28 +13,38 @@ on:
       - 'sym-lib-table'
       - '.github/workflows/kicad-manufacturing-check.yml'
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
-    container:
-      image: kicad/kicad:9.0
 
     steps:
       - name: Download repository
         uses: actions/checkout@v4
 
+      - name: Create reports directory
+        run: mkdir -p reports
+
       - name: Inspect environment and project files
         shell: bash
         run: |
-          set -u
-          mkdir -p reports
           {
-            echo "PWD: $(pwd)"
-            echo "KiCad version:"
-            kicad-cli --version || true
+            echo "PWD: $PWD"
             echo
             echo "Repository files:"
             find . -maxdepth 3 -type f -print | sort
+            echo
+            echo "Docker version:"
+            docker --version
+            echo
+            echo "KiCad version:"
+            docker run --rm \
+              -v "$GITHUB_WORKSPACE:/work" \
+              -w /work \
+              kicad/kicad:9.0 \
+              kicad-cli version
           } 2>&1 | tee reports/environment.log
 
       - name: Run ERC
@@ -42,19 +52,26 @@ jobs:
         shell: bash
         run: |
           set +e
-          kicad-cli sch erc \
-            --severity-all \
-            --exit-code-violations \
-            --output reports/erc.rpt \
-            pcb-psu-led.kicad_sch \
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/work" \
+            -w /work \
+            kicad/kicad:9.0 \
+            kicad-cli sch erc \
+              --severity-all \
+              --exit-code-violations \
+              --output reports/erc.rpt \
+              pcb-psu-led.kicad_sch \
             > reports/erc-console.log 2>&1
+
           rc=$?
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
           echo "exit_code=$rc" >> reports/erc-console.log
+
           if [ ! -f reports/erc.rpt ]; then
             echo "KiCad did not create erc.rpt. See erc-console.log." > reports/erc.rpt
           fi
+
           cat reports/erc-console.log
-          echo "rc=$rc" >> "$GITHUB_OUTPUT"
           exit 0
 
       - name: Run DRC and schematic parity check
@@ -62,20 +79,27 @@ jobs:
         shell: bash
         run: |
           set +e
-          kicad-cli pcb drc \
-            --severity-all \
-            --exit-code-violations \
-            --schematic-parity \
-            --output reports/drc.rpt \
-            pcb-psu-led.kicad_pcb \
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/work" \
+            -w /work \
+            kicad/kicad:9.0 \
+            kicad-cli pcb drc \
+              --severity-all \
+              --exit-code-violations \
+              --schematic-parity \
+              --output reports/drc.rpt \
+              pcb-psu-led.kicad_pcb \
             > reports/drc-console.log 2>&1
+
           rc=$?
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
           echo "exit_code=$rc" >> reports/drc-console.log
+
           if [ ! -f reports/drc.rpt ]; then
             echo "KiCad did not create drc.rpt. See drc-console.log." > reports/drc.rpt
           fi
+
           cat reports/drc-console.log
-          echo "rc=$rc" >> "$GITHUB_OUTPUT"
           exit 0
 
       - name: Upload ERC and DRC reports
@@ -83,16 +107,20 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pcb-psu-led-check-reports
-          path: reports/
+          path: reports
           if-no-files-found: error
+          retention-days: 14
 
-      - name: Fail when ERC or DRC command failed or found violations
+      - name: Fail when ERC or DRC failed or found violations
         if: always()
         shell: bash
         run: |
           echo "ERC exit code: ${{ steps.erc.outputs.rc }}"
           echo "DRC exit code: ${{ steps.drc.outputs.rc }}"
-          if [ "${{ steps.erc.outputs.rc }}" != "0" ] || [ "${{ steps.drc.outputs.rc }}" != "0" ]; then
-            echo "ERC or DRC failed or reported violations. Download pcb-psu-led-check-reports."
+
+          if [ "${{ steps.erc.outputs.rc }}" != "0" ] || \
+             [ "${{ steps.drc.outputs.rc }}" != "0" ]; then
+            echo "ERC or DRC failed or found violations."
+            echo "Download artifact: pcb-psu-led-check-reports"
             exit 1
           fi
