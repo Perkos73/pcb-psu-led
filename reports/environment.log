@@ -25,6 +25,7 @@ Repository files:
 ./.git/logs/HEAD
 ./.git/shallow
 ./.github/workflows/kicad-manufacturing-check.yml
+./.github/workflows/pokaz-raport.yml
 ./.gitignore
 ./README.md
 ./footprints.pretty/Talema_70000K.kicad_mod
@@ -32,7 +33,9 @@ Repository files:
 ./pcb-psu-led.kicad_pcb
 ./pcb-psu-led.kicad_pro
 ./pcb-psu-led.kicad_sch
+./reports/drc-console.log
 ./reports/environment.log
+./reports/erc-console.log
 ./sym-lib-table
 ./symbols.kicad_sym
 
@@ -55,6 +58,9 @@ fd5a0db17ede: Pulling fs layer
 591202fea89c: Pulling fs layer
 30ff91259e4e: Pulling fs layer
 6fe7b24cfb8f: Pulling fs layer
+46f0bfc95fd9: Waiting
+f8f12f6f970e: Waiting
+f36d0dc2d7bb: Waiting
 aab27c973195: Waiting
 fd5a0db17ede: Waiting
 898e32f0e177: Waiting
@@ -62,9 +68,6 @@ fd5a0db17ede: Waiting
 30ff91259e4e: Waiting
 6fe7b24cfb8f: Waiting
 207ac5616789: Waiting
-46f0bfc95fd9: Waiting
-f8f12f6f970e: Waiting
-f36d0dc2d7bb: Waiting
 26996d003dd4: Verifying Checksum
 26996d003dd4: Download complete
 e64c2316cd50: Verifying Checksum
@@ -79,15 +82,16 @@ aab27c973195: Verifying Checksum
 aab27c973195: Download complete
 fd5a0db17ede: Verifying Checksum
 fd5a0db17ede: Download complete
+898e32f0e177: Verifying Checksum
 898e32f0e177: Download complete
+f8f12f6f970e: Verifying Checksum
+f8f12f6f970e: Download complete
 591202fea89c: Verifying Checksum
 591202fea89c: Download complete
 30ff91259e4e: Verifying Checksum
 30ff91259e4e: Download complete
 6fe7b24cfb8f: Verifying Checksum
 6fe7b24cfb8f: Download complete
-f8f12f6f970e: Verifying Checksum
-f8f12f6f970e: Download complete
 d0b76b7e8d80: Verifying Checksum
 d0b76b7e8d80: Download complete
 26996d003dd4: Pull complete
