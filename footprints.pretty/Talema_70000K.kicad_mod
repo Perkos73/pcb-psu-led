@@ -1,0 +1,38 @@
+(footprint "Talema_70000K"
+  (version 20240108)
+  (generator "pcb-psu-led-compiler")
+  (layer "F.Cu")
+  (descr "Transformator Talema 70000K 1.6VA 2x115V 2x7V, obudowa 39.6x39.6mm")
+  (tags "transformer talema 70000")
+  (attr through_hole)
+  
+  (property "Reference" "T" (at 0 -22 0) (effects (font (size 1 1) (thickness 0.15))))
+  (property "Value" "Talema_70000K" (at 0 22 0) (effects (font (size 1 1) (thickness 0.15))))
+  (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27) (thickness 0.15)) hide))
+  (property "Datasheet" "" (at 0 0 0) (effects (font (size 1.27 1.27) (thickness 0.15)) hide))
+  (property "Description" "" (at 0 0 0) (effects (font (size 1.27 1.27) (thickness 0.15)) hide))
+
+  ;; Obrys obudowy na warstwie sitodruku (F.SilkS) - 39.6 x 39.6 mm
+  (fp_rect (start -19.8 -19.8) (end 19.8 19.8) (stroke (width 0.12) (type solid)) (fill none) (layer "F.SilkS"))
+  
+  ;; Znacznik pinu 1 (ścięty narożnik na sitodruku)
+  (fp_line (start -19.8 -15.0) (end -15.0 -19.8) (stroke (width 0.12) (type solid)) (layer "F.SilkS"))
+
+  ;; Granica bezpieczeństwa (F.Courtyard) - 41.0 x 41.0 mm (z zapasem)
+  (fp_rect (start -20.5 -20.5) (end 20.5 20.5) (stroke (width 0.05) (type solid)) (fill none) (layer "F.CrtYd"))
+
+  ;; Pady (Nóżki) - Rząd 1 (Wejście AC 230V) - Y = -13.75 mm
+  ;; Średnica pada: 2.4 mm, Średnica wiercenia (drill): 1.2 mm
+  (pad "1" tht circle (at -10.16 -13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
+  (pad "2" tht circle (at -5.08 -13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
+  (pad "3" tht circle (at 0 -13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
+  (pad "4" tht circle (at 5.08 -13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
+  (pad "5" tht circle (at 10.16 -13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
+
+  ;; Pady (Nóżki) - Rząd 2 (Wyjście DC/Niskie napięcie) - Y = 13.75 mm
+  (pad "6" tht circle (at 10.16 13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
+  (pad "7" tht circle (at 5.08 13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
+  (pad "8" tht circle (at 0 13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
+  (pad "9" tht circle (at -5.08 13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
+  (pad "10" tht circle (at -10.16 13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
+)
