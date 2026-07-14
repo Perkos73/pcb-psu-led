@@ -1,3 +1,0 @@
-Found 25 violations
-21:16:41: Error: can't open file 'reports/erc.rpt' (error 13: Permission denied)
-exit_code=4
