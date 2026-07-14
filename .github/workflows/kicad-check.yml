@@ -1,0 +1,121 @@
+name: KiCad manufacturing check
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '**.kicad_sch'
+      - '**.kicad_pcb'
+      - '**.kicad_pro'
+      - '**.kicad_sym'
+      - '**.kicad_mod'
+      - 'fp-lib-table'
+      - 'sym-lib-table'
+
+permissions:
+  contents: write # To pozwala botowi zapisać folder z raportami w zakładce Code
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download repository
+        uses: actions/checkout@v4
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Inspect environment and project files
+        shell: bash
+        run: |
+          {
+            echo "PWD: $PWD"
+            echo
+            echo "Repository files:"
+            find . -maxdepth 3 -type f -print | sort
+            echo
+            echo "Docker version:"
+            docker --version
+            echo
+            echo "KiCad version:"
+            docker run --rm \
+              -v "$GITHUB_WORKSPACE:/work" \
+              -w /work \
+              kicad/kicad:9.0 \
+              kicad-cli version
+          } 2>&1 | tee reports/environment.log
+
+      - name: Run ERC
+        id: erc
+        shell: bash
+        run: |
+          set +e
+          if [ -f "pcb-psu-led.kicad_sch" ]; then
+            docker run --rm \
+              -v "$GITHUB_WORKSPACE:/work" \
+              -w /work \
+              kicad/kicad:9.0 \
+              kicad-cli sch erc \
+                --severity-all \
+                --exit-code-violations \
+                --output reports/erc.rpt \
+                pcb-psu-led.kicad_sch \
+              > reports/erc-console.log 2>&1
+            rc=$?
+          else
+            echo "Brak pliku schematu pcb-psu-led.kicad_sch!" > reports/erc-console.log
+            rc=1
+          fi
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          echo "exit_code=$rc" >> reports/erc-console.log
+          exit 0
+
+      - name: Run DRC and schematic parity check
+        id: drc
+        shell: bash
+        run: |
+          set +e
+          if [ -f "pcb-psu-led.kicad_pcb" ]; then
+            docker run --rm \
+              -v "$GITHUB_WORKSPACE:/work" \
+              -w /work \
+              kicad/kicad:9.0 \
+              kicad-cli pcb drc \
+                --severity-all \
+                --exit-code-violations \
+                --schematic-parity \
+                --output reports/drc.rpt \
+                pcb-psu-led.kicad_pcb \
+              > reports/drc-console.log 2>&1
+            rc=$?
+          else
+            echo "Brak pliku płytki pcb-psu-led.kicad_pcb!" > reports/drc-console.log
+            rc=0
+          fi
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          echo "exit_code=$rc" >> reports/drc-console.log
+          exit 0
+
+      - name: Commit and Push reports to repository
+        if: always()
+        shell: bash
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add reports/
+          git commit -m "Automatyczna aktualizacja raportow KiCad" || echo "Brak nowych zmian w raportach"
+          git push
+
+      - name: Fail when ERC or DRC failed or found violations
+        if: always()
+        shell: bash
+        run: |
+          echo "ERC exit code: ${{ steps.erc.outputs.rc }}"
+          echo "DRC exit code: ${{ steps.drc.outputs.rc }}"
+
+          if [ "${{ steps.erc.outputs.rc }}" != "0" ] || \
+             [ "${{ steps.drc.outputs.rc }}" != "0" ]; then
+            echo "ERC or DRC failed or found violations."
+            exit 1
+          fi
