@@ -1,0 +1,108 @@
+PWD: /home/runner/work/pcb-psu-led/pcb-psu-led
+
+Repository files:
+./.git/FETCH_HEAD
+./.git/HEAD
+./.git/config
+./.git/config.worktree
+./.git/description
+./.git/hooks/applypatch-msg.sample
+./.git/hooks/commit-msg.sample
+./.git/hooks/fsmonitor-watchman.sample
+./.git/hooks/post-update.sample
+./.git/hooks/pre-applypatch.sample
+./.git/hooks/pre-commit.sample
+./.git/hooks/pre-merge-commit.sample
+./.git/hooks/pre-push.sample
+./.git/hooks/pre-rebase.sample
+./.git/hooks/pre-receive.sample
+./.git/hooks/prepare-commit-msg.sample
+./.git/hooks/push-to-checkout.sample
+./.git/hooks/sendemail-validate.sample
+./.git/hooks/update.sample
+./.git/index
+./.git/info/exclude
+./.git/logs/HEAD
+./.git/shallow
+./.github/workflows/kicad-manufacturing-check.yml
+./.gitignore
+./README.md
+./footprints.pretty/Talema_70000K.kicad_mod
+./fp-lib-table
+./pcb-psu-led.kicad_pcb
+./pcb-psu-led.kicad_pro
+./pcb-psu-led.kicad_sch
+./reports/environment.log
+./sym-lib-table
+./symbols.kicad_sym
+
+Docker version:
+Docker version 28.0.4, build b8034c0
+
+KiCad version:
+Unable to find image 'kicad/kicad:9.0' locally
+9.0: Pulling from kicad/kicad
+26996d003dd4: Pulling fs layer
+d0b76b7e8d80: Pulling fs layer
+e64c2316cd50: Pulling fs layer
+207ac5616789: Pulling fs layer
+46f0bfc95fd9: Pulling fs layer
+f8f12f6f970e: Pulling fs layer
+f36d0dc2d7bb: Pulling fs layer
+aab27c973195: Pulling fs layer
+fd5a0db17ede: Pulling fs layer
+898e32f0e177: Pulling fs layer
+591202fea89c: Pulling fs layer
+30ff91259e4e: Pulling fs layer
+6fe7b24cfb8f: Pulling fs layer
+aab27c973195: Waiting
+fd5a0db17ede: Waiting
+898e32f0e177: Waiting
+591202fea89c: Waiting
+30ff91259e4e: Waiting
+6fe7b24cfb8f: Waiting
+207ac5616789: Waiting
+46f0bfc95fd9: Waiting
+f8f12f6f970e: Waiting
+f36d0dc2d7bb: Waiting
+26996d003dd4: Verifying Checksum
+26996d003dd4: Download complete
+e64c2316cd50: Verifying Checksum
+e64c2316cd50: Download complete
+46f0bfc95fd9: Verifying Checksum
+46f0bfc95fd9: Download complete
+207ac5616789: Verifying Checksum
+207ac5616789: Download complete
+f36d0dc2d7bb: Verifying Checksum
+f36d0dc2d7bb: Download complete
+aab27c973195: Verifying Checksum
+aab27c973195: Download complete
+fd5a0db17ede: Verifying Checksum
+fd5a0db17ede: Download complete
+898e32f0e177: Download complete
+591202fea89c: Verifying Checksum
+591202fea89c: Download complete
+30ff91259e4e: Verifying Checksum
+30ff91259e4e: Download complete
+6fe7b24cfb8f: Verifying Checksum
+6fe7b24cfb8f: Download complete
+f8f12f6f970e: Verifying Checksum
+f8f12f6f970e: Download complete
+d0b76b7e8d80: Verifying Checksum
+d0b76b7e8d80: Download complete
+26996d003dd4: Pull complete
+d0b76b7e8d80: Pull complete
+e64c2316cd50: Pull complete
+207ac5616789: Pull complete
+46f0bfc95fd9: Pull complete
+f8f12f6f970e: Pull complete
+f36d0dc2d7bb: Pull complete
+aab27c973195: Pull complete
+fd5a0db17ede: Pull complete
+898e32f0e177: Pull complete
+591202fea89c: Pull complete
+30ff91259e4e: Pull complete
+6fe7b24cfb8f: Pull complete
+Digest: sha256:e638b79b0321f29395a5b783e94bb9f3c73303e8da15da27b8f5cb4b67a37729
+Status: Downloaded newer image for kicad/kicad:9.0
+9.0.9
