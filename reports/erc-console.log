@@ -1,96 +1,30 @@
-Unable to find image 'kicad/kicad:9.0' locally
-9.0: Pulling from kicad/kicad
-26996d003dd4: Pulling fs layer
-d0b76b7e8d80: Pulling fs layer
-e64c2316cd50: Pulling fs layer
-207ac5616789: Pulling fs layer
-46f0bfc95fd9: Pulling fs layer
-f8f12f6f970e: Pulling fs layer
-f36d0dc2d7bb: Pulling fs layer
-aab27c973195: Pulling fs layer
-fd5a0db17ede: Pulling fs layer
-898e32f0e177: Pulling fs layer
-591202fea89c: Pulling fs layer
-30ff91259e4e: Pulling fs layer
-6fe7b24cfb8f: Pulling fs layer
-207ac5616789: Waiting
-46f0bfc95fd9: Waiting
-f8f12f6f970e: Waiting
-f36d0dc2d7bb: Waiting
-aab27c973195: Waiting
-fd5a0db17ede: Waiting
-898e32f0e177: Waiting
-591202fea89c: Waiting
-30ff91259e4e: Waiting
-6fe7b24cfb8f: Waiting
-e64c2316cd50: Verifying Checksum
-e64c2316cd50: Download complete
-26996d003dd4: Verifying Checksum
-26996d003dd4: Download complete
-207ac5616789: Verifying Checksum
-207ac5616789: Download complete
-46f0bfc95fd9: Verifying Checksum
-46f0bfc95fd9: Download complete
-f36d0dc2d7bb: Verifying Checksum
-f36d0dc2d7bb: Download complete
-d0b76b7e8d80: Verifying Checksum
-d0b76b7e8d80: Download complete
-f8f12f6f970e: Verifying Checksum
-f8f12f6f970e: Download complete
-aab27c973195: Verifying Checksum
-aab27c973195: Download complete
-fd5a0db17ede: Verifying Checksum
-fd5a0db17ede: Download complete
-898e32f0e177: Verifying Checksum
-898e32f0e177: Download complete
-591202fea89c: Verifying Checksum
-591202fea89c: Download complete
-30ff91259e4e: Verifying Checksum
-30ff91259e4e: Download complete
-6fe7b24cfb8f: Verifying Checksum
-6fe7b24cfb8f: Download complete
-26996d003dd4: Pull complete
-d0b76b7e8d80: Pull complete
-e64c2316cd50: Pull complete
-207ac5616789: Pull complete
-46f0bfc95fd9: Pull complete
-f8f12f6f970e: Pull complete
-f36d0dc2d7bb: Pull complete
-aab27c973195: Pull complete
-fd5a0db17ede: Pull complete
-898e32f0e177: Pull complete
-591202fea89c: Pull complete
-30ff91259e4e: Pull complete
-6fe7b24cfb8f: Pull complete
-Digest: sha256:e638b79b0321f29395a5b783e94bb9f3c73303e8da15da27b8f5cb4b67a37729
-Status: Downloaded newer image for kicad/kicad:9.0
-22:18:48: Error: Directory '/.cache' couldn't be created (error 13: Permission denied)
-22:18:48: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
-22:18:48: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
-22:18:48: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
-22:18:48: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
-22:18:48: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
-22:18:48: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
-22:18:48: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
-22:18:48: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
-22:18:48: Error: Directory '/.config' couldn't be created (error 13: Permission denied)
-22:18:48: Error: Directory '/.config/kicad/9.0' couldn't be created (error 2: No such file or directory)
-22:18:48: Error: Directory '/.config/kicad/9.0/colors' couldn't be created (error 2: No such file or directory)
-22:18:48: Error: An error occurred attempting to load the global design block library table.
+22:39:17: Error: Directory '/.cache' couldn't be created (error 13: Permission denied)
+22:39:17: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
+22:39:17: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
+22:39:17: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
+22:39:17: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
+22:39:17: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
+22:39:17: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
+22:39:17: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
+22:39:17: Error: Directory '/.local' couldn't be created (error 13: Permission denied)
+22:39:17: Error: Directory '/.config' couldn't be created (error 13: Permission denied)
+22:39:17: Error: Directory '/.config/kicad/9.0' couldn't be created (error 2: No such file or directory)
+22:39:17: Error: Directory '/.config/kicad/9.0/colors' couldn't be created (error 2: No such file or directory)
+22:39:17: Error: An error occurred attempting to load the global design block library table.
 Please edit this global design block library table in Preferences menu. No such file or directory
-22:18:48: Error: Directory '/.config' couldn't be created (error 13: Permission denied)
-22:18:48: Error: Directory '/.config/kicad/9.0' couldn't be created (error 2: No such file or directory)
+22:39:17: Error: Directory '/.config' couldn't be created (error 13: Permission denied)
+22:39:17: Error: Directory '/.config/kicad/9.0' couldn't be created (error 2: No such file or directory)
 Fontconfig error: No writable cache directories
 Fontconfig error: No writable cache directories
 Fontconfig error: No writable cache directories
 Fontconfig error: No writable cache directories
-22:18:48: Error: Directory '/.config' couldn't be created (error 13: Permission denied)
-22:18:48: Error: An error occurred attempting to load the global footprint library table. Cannot create global library table path '/.config/kicad/9.0'.
+22:39:18: Error: Directory '/.config' couldn't be created (error 13: Permission denied)
+22:39:18: Error: An error occurred attempting to load the global footprint library table. Cannot create global library table path '/.config/kicad/9.0'.
 Found 18 violations
 Saved ERC Report to reports/erc.rpt
-22:18:48: Error: Directory '/.config/kicad/9.0' couldn't be created (error 2: No such file or directory)
-22:18:48: Error: Directory '/.config/kicad/9.0' couldn't be created (error 2: No such file or directory)
-22:18:48: Error: Directory '/.config/kicad/9.0' couldn't be created (error 2: No such file or directory)
-22:18:48: Error: Directory '/.config/kicad/9.0' couldn't be created (error 2: No such file or directory)
-22:18:48: Error: Directory '/.config/kicad/9.0' couldn't be created (error 2: No such file or directory)
+22:39:18: Error: Directory '/.config/kicad/9.0' couldn't be created (error 2: No such file or directory)
+22:39:18: Error: Directory '/.config/kicad/9.0' couldn't be created (error 2: No such file or directory)
+22:39:18: Error: Directory '/.config/kicad/9.0' couldn't be created (error 2: No such file or directory)
+22:39:18: Error: Directory '/.config/kicad/9.0' couldn't be created (error 2: No such file or directory)
+22:39:18: Error: Directory '/.config/kicad/9.0' couldn't be created (error 2: No such file or directory)
 exit_code=5
