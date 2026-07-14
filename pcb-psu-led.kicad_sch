@@ -990,6 +990,7 @@
 					) hide
 				)
 			)
+
 			(property "Datasheet" ""
 				(at 0 0 0)
 				(effects
