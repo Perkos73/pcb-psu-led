@@ -23,29 +23,60 @@ jobs:
       - name: Download repository
         uses: actions/checkout@v4
 
-      - name: Prepare report directory
-        run: mkdir -p reports
+      - name: Inspect environment and project files
+        shell: bash
+        run: |
+          set -u
+          mkdir -p reports
+          {
+            echo "PWD: $(pwd)"
+            echo "KiCad version:"
+            kicad-cli --version || true
+            echo
+            echo "Repository files:"
+            find . -maxdepth 3 -type f -print | sort
+          } 2>&1 | tee reports/environment.log
 
       - name: Run ERC
         id: erc
-        continue-on-error: true
-        run: >-
-          kicad-cli sch erc
-          --severity-all
-          --exit-code-violations
-          --output reports/erc.rpt
-          pcb-psu-led.kicad_sch
+        shell: bash
+        run: |
+          set +e
+          kicad-cli sch erc \
+            --severity-all \
+            --exit-code-violations \
+            --output reports/erc.rpt \
+            pcb-psu-led.kicad_sch \
+            > reports/erc-console.log 2>&1
+          rc=$?
+          echo "exit_code=$rc" >> reports/erc-console.log
+          if [ ! -f reports/erc.rpt ]; then
+            echo "KiCad did not create erc.rpt. See erc-console.log." > reports/erc.rpt
+          fi
+          cat reports/erc-console.log
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          exit 0
 
       - name: Run DRC and schematic parity check
         id: drc
-        continue-on-error: true
-        run: >-
-          kicad-cli pcb drc
-          --severity-all
-          --exit-code-violations
-          --schematic-parity
-          --output reports/drc.rpt
-          pcb-psu-led.kicad_pcb
+        shell: bash
+        run: |
+          set +e
+          kicad-cli pcb drc \
+            --severity-all \
+            --exit-code-violations \
+            --schematic-parity \
+            --output reports/drc.rpt \
+            pcb-psu-led.kicad_pcb \
+            > reports/drc-console.log 2>&1
+          rc=$?
+          echo "exit_code=$rc" >> reports/drc-console.log
+          if [ ! -f reports/drc.rpt ]; then
+            echo "KiCad did not create drc.rpt. See drc-console.log." > reports/drc.rpt
+          fi
+          cat reports/drc-console.log
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          exit 0
 
       - name: Upload ERC and DRC reports
         if: always()
@@ -55,8 +86,13 @@ jobs:
           path: reports/
           if-no-files-found: error
 
-      - name: Fail when ERC or DRC found violations
-        if: steps.erc.outcome == 'failure' || steps.drc.outcome == 'failure'
+      - name: Fail when ERC or DRC command failed or found violations
+        if: always()
+        shell: bash
         run: |
-          echo "ERC or DRC reported violations. Download the report artifact."
-          exit 1
+          echo "ERC exit code: ${{ steps.erc.outputs.rc }}"
+          echo "DRC exit code: ${{ steps.drc.outputs.rc }}"
+          if [ "${{ steps.erc.outputs.rc }}" != "0" ] || [ "${{ steps.drc.outputs.rc }}" != "0" ]; then
+            echo "ERC or DRC failed or reported violations. Download pcb-psu-led-check-reports."
+            exit 1
+          fi
