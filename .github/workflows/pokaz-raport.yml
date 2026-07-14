@@ -1,0 +1,43 @@
+name: Pokaz Raport na Ekranie
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '**.kicad_sch'
+
+permissions:
+  contents: read
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download repository
+        uses: actions/checkout@v4
+
+      - name: Run ERC
+        id: erc
+        shell: bash
+        run: |
+          set +e
+          echo "### WYNIKI TESTU ERC DLA SCHEMATU:" > summary.md
+          echo "\`\`\`text" >> summary.md
+          
+          if [ -f "pcb-psu-led.kicad_sch" ]; then
+            docker run --rm \
+              -v "$GITHUB_WORKSPACE:/work" \
+              -w /work \
+              kicad/kicad:9.0 \
+              kicad-cli sch erc \
+                --severity-all \
+                --output /work/erc.rpt \
+                pcb-psu-led.kicad_sch
+            
+            cat erc.rpt >> summary.md
+          else
+            echo "Brak pliku pcb-psu-led.kicad_sch!" >> summary.md
+          fi
+          
+          echo "\`\`\`" >> summary.md
+          cat summary.md >> $GITHUB_STEP_SUMMARY
