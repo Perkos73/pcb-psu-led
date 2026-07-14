@@ -1,0 +1,10 @@
+(kicad_sch
+  (version 20231120)
+  (generator "pcb-psu-led-compiler")
+  (uuid "a2f8b5c0-1234-5678-90ab-cdef12345678")
+  (paper "A4")
+  (title_block
+    (title "Zasilacz PSU LED - Talema 70000K")
+    (company "Perkos73")
+  )
+)
