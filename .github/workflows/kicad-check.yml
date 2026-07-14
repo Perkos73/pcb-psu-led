@@ -24,7 +24,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create reports directory
-        run: mkdir -p reports
+         run: |
+            mkdir -p reports
+            chmod 777 reports
 
       - name: Inspect environment and project files
         shell: bash
