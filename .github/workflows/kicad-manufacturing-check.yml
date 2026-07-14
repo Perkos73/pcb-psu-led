@@ -13,7 +13,7 @@ on:
       - 'sym-lib-table'
 
 permissions:
-  contents: read
+  contents: write # Daje skryptowi uprawnienia do zapisania plików w Twoim repozytorium
 
 jobs:
   validate:
@@ -51,7 +51,6 @@ jobs:
         shell: bash
         run: |
           set +e
-          # Sprawdzamy czy schemat w ogóle istnieje przed testem
           if [ -f "pcb-psu-led.kicad_sch" ]; then
             docker run --rm \
               -v "$GITHUB_WORKSPACE:/work" \
@@ -77,7 +76,6 @@ jobs:
         shell: bash
         run: |
           set +e
-          # Zapobiegamy wywaleniu się jeśli nie ma jeszcze pliku pcb
           if [ -f "pcb-psu-led.kicad_pcb" ]; then
             docker run --rm \
               -v "$GITHUB_WORKSPACE:/work" \
@@ -92,18 +90,32 @@ jobs:
               > reports/drc-console.log 2>&1
             rc=$?
           else
-            echo "Brak pliku płytki pcb-psu-led.kicad_pcb! Pomijam test DRC." > reports/drc-console.log
+            echo "Brak pliku płytki pcb-psu-led.kicad_pcb!" > reports/drc-console.log
             rc=0
           fi
           echo "rc=$rc" >> "$GITHUB_OUTPUT"
           echo "exit_code=$rc" >> reports/drc-console.log
           exit 0
 
-      - name: Upload ERC and DRC reports
+      - name: Commit and Push reports to repository
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pcb-psu-led-check-reports
-          path: reports
-          if-no-files-found: error
-          retention-days: 14
+        shell: bash
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add reports/
+          git commit -m "Automatyczna aktualizacja raportow KiCad" || echo "Brak nowych zmian w raportach"
+          git push
+
+      - name: Fail when ERC or DRC failed or found violations
+        if: always()
+        shell: bash
+        run: |
+          echo "ERC exit code: ${{ steps.erc.outputs.rc }}"
+          echo "DRC exit code: ${{ steps.drc.outputs.rc }}"
+
+          if [ "${{ steps.erc.outputs.rc }}" != "0" ] || \
+             [ "${{ steps.drc.outputs.rc }}" != "0" ]; then
+            echo "ERC or DRC failed or found violations."
+            exit 1
+          fi
