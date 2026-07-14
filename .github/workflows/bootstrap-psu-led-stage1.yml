@@ -1,0 +1,180 @@
+name: Bootstrap PCB PSU LED stage 1
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/bootstrap-psu-led-stage1.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  bootstrap-and-erc:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Restore stage-1 KiCad project files
+        shell: bash
+        run: |
+          cat > /tmp/pcb_psu_led_stage1.b64 <<'PAYLOAD'
+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
+PAYLOAD
+          base64 -d /tmp/pcb_psu_led_stage1.b64 > /tmp/pcb_psu_led_stage1.tar.gz
+          tar -xzf /tmp/pcb_psu_led_stage1.tar.gz -C .
+          mkdir -p reports
+          chmod 777 reports
+
+      - name: Run ERC with KiCad 9
+        id: erc
+        shell: bash
+        run: |
+          set +e
+          docker run --rm             --user "$(id -u):$(id -g)"             -v "$GITHUB_WORKSPACE:/work"             -w /work             kicad/kicad:9.0             kicad-cli sch erc               --severity-all               --exit-code-violations               --output reports/erc.rpt               pcb-psu-led.kicad_sch               > reports/erc-console.log 2>&1
+          rc=$?
+          echo "code=$rc" >> "$GITHUB_OUTPUT"
+          echo "exit_code=$rc" >> reports/erc-console.log
+          if [ ! -f reports/erc.rpt ]; then
+            {
+              echo "ERC REPORT WAS NOT CREATED"
+              echo
+              cat reports/erc-console.log
+            } > reports/erc.rpt
+          fi
+          cat reports/erc-console.log
+          exit 0
+
+      - name: Save project and ERC report in repository
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add             pcb-psu-led.kicad_pro             pcb-psu-led.kicad_sch             symbols.kicad_sym             sym-lib-table             fp-lib-table             footprints.pretty/Talema_70000K.kicad_mod             reports/erc.rpt             reports/erc-console.log
+          if git diff --cached --quiet; then
+            echo "No changes to save."
+          else
+            git commit -m "Add PCB PSU LED stage-1 schematic and ERC report"
+            git push origin HEAD:main
+          fi
+
+      - name: Show ERC result
+        if: always()
+        shell: bash
+        run: |
+          echo "================ ERC REPORT ================"
+          cat reports/erc.rpt 2>/dev/null || true
+          echo
+          echo "================ ERC CONSOLE ==============="
+          cat reports/erc-console.log 2>/dev/null || true
+          echo
+          echo "ERC exit code: ${{ steps.erc.outputs.code }}"
+
+      - name: Mark ERC violations
+        if: always()
+        shell: bash
+        run: |
+          if [ "${{ steps.erc.outputs.code }}" != "0" ]; then
+            echo "ERC found violations. The report is saved in reports/erc.rpt."
+            exit 1
+          fi
