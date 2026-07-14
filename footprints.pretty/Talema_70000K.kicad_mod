@@ -1,38 +1,142 @@
-(footprint "Talema_70000K"
+(footprint "Talema_70000K_1p6VA"
   (version 20240108)
-  (generator "pcb-psu-led-compiler")
+  (generator "pcb-psu-led-rev-0.2")
   (layer "F.Cu")
-  (descr "Transformator Talema 70000K 1.6VA 2x115V 2x7V, obudowa 39.6x39.6mm")
-  (tags "transformer talema 70000")
+  (descr "Talema 70000K, 1.6 VA, 2x115 V / 2x7 V, body 39.6 x 39.6 mm, M4 central insert")
+  (tags "transformer toroidal Talema 70000K 1.6VA THT")
   (attr through_hole)
-  
-  (property "Reference" "T" (at 0 -22 0) (effects (font (size 1 1) (thickness 0.15))))
-  (property "Value" "Talema_70000K" (at 0 22 0) (effects (font (size 1 1) (thickness 0.15))))
-  (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27) (thickness 0.15)) hide))
-  (property "Datasheet" "" (at 0 0 0) (effects (font (size 1.27 1.27) (thickness 0.15)) hide))
-  (property "Description" "" (at 0 0 0) (effects (font (size 1.27 1.27) (thickness 0.15)) hide))
 
-  ;; Obrys obudowy na warstwie sitodruku (F.SilkS) - 39.6 x 39.6 mm
-  (fp_rect (start -19.8 -19.8) (end 19.8 19.8) (stroke (width 0.12) (type solid)) (fill none) (layer "F.SilkS"))
-  
-  ;; Znacznik pinu 1 (ścięty narożnik na sitodruku)
-  (fp_line (start -19.8 -15.0) (end -15.0 -19.8) (stroke (width 0.12) (type solid)) (layer "F.SilkS"))
+  (property "Reference" "T1"
+    (at 0 -23 0)
+    (layer "F.SilkS")
+    (effects (font (size 1 1) (thickness 0.15)))
+  )
+  (property "Value" "Talema_70000K_1p6VA"
+    (at 0 23 0)
+    (layer "F.Fab")
+    (effects (font (size 1 1) (thickness 0.15)))
+  )
+  (property "Footprint" ""
+    (at 0 0 0)
+    (unlocked yes)
+    (layer "F.Fab")
+    (hide yes)
+    (effects (font (size 1.27 1.27) (thickness 0.15)))
+  )
+  (property "Datasheet" "https://talema.com/products/low-profile-pcb-mounting-1-6va-to-50va-7000k/"
+    (at 0 0 0)
+    (unlocked yes)
+    (layer "F.Fab")
+    (hide yes)
+    (effects (font (size 1.27 1.27) (thickness 0.15)))
+  )
+  (property "Description" "Talema 70000K 1.6VA PCB toroidal transformer"
+    (at 0 0 0)
+    (unlocked yes)
+    (layer "F.Fab")
+    (hide yes)
+    (effects (font (size 1.27 1.27) (thickness 0.15)))
+  )
 
-  ;; Granica bezpieczeństwa (F.Courtyard) - 41.0 x 41.0 mm (z zapasem)
-  (fp_rect (start -20.5 -20.5) (end 20.5 20.5) (stroke (width 0.05) (type solid)) (fill none) (layer "F.CrtYd"))
+  (fp_rect
+    (start -19.8 -19.8)
+    (end 19.8 19.8)
+    (stroke (width 0.1) (type default))
+    (fill none)
+    (layer "F.Fab")
+  )
+  (fp_rect
+    (start -20.1 -20.1)
+    (end 20.1 20.1)
+    (stroke (width 0.2) (type default))
+    (fill none)
+    (layer "F.SilkS")
+  )
+  (fp_rect
+    (start -21.8 -21.8)
+    (end 21.8 21.8)
+    (stroke (width 0.05) (type default))
+    (fill none)
+    (layer "F.CrtYd")
+  )
 
-  ;; Pady (Nóżki) - Rząd 1 (Wejście AC 230V) - Y = -13.75 mm
-  ;; Średnica pada: 2.4 mm, Średnica wiercenia (drill): 1.2 mm
-  (pad "1" tht circle (at -10.16 -13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
-  (pad "2" tht circle (at -5.08 -13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
-  (pad "3" tht circle (at 0 -13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
-  (pad "4" tht circle (at 5.08 -13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
-  (pad "5" tht circle (at 10.16 -13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
+  (fp_text user "PRIMARY 230V"
+    (at -8.5 0 90)
+    (layer "F.SilkS")
+    (effects (font (size 1 1) (thickness 0.15)))
+  )
+  (fp_text user "SECONDARY SELV"
+    (at 8.5 0 90)
+    (layer "F.SilkS")
+    (effects (font (size 1 1) (thickness 0.15)))
+  )
+  (fp_text user "M4 INSERT"
+    (at 0 0 0)
+    (layer "F.Fab")
+    (effects (font (size 0.8 0.8) (thickness 0.12)))
+  )
+  (fp_circle
+    (center 0 0)
+    (end 7 0)
+    (stroke (width 0.1) (type default))
+    (fill none)
+    (layer "Dwgs.User")
+  )
 
-  ;; Pady (Nóżki) - Rząd 2 (Wyjście DC/Niskie napięcie) - Y = 13.75 mm
-  (pad "6" tht circle (at 10.16 13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
-  (pad "7" tht circle (at 5.08 13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
-  (pad "8" tht circle (at 0 13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
-  (pad "9" tht circle (at -5.08 13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
-  (pad "10" tht circle (at -10.16 13.75) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask"))
+  (pad "" np_thru_hole circle
+    (at 0 0)
+    (size 4.3 4.3)
+    (drill 4.3)
+    (layers "*.Cu" "*.Mask")
+  )
+
+  (pad "3" thru_hole circle
+    (at -17.78 -17.78)
+    (size 3 3)
+    (drill 1.3)
+    (layers "*.Cu" "*.Mask")
+  )
+  (pad "4" thru_hole circle
+    (at -17.78 -12.7)
+    (size 3 3)
+    (drill 1.3)
+    (layers "*.Cu" "*.Mask")
+  )
+  (pad "5" thru_hole circle
+    (at -17.78 12.7)
+    (size 3 3)
+    (drill 1.3)
+    (layers "*.Cu" "*.Mask")
+  )
+  (pad "6" thru_hole circle
+    (at -17.78 17.78)
+    (size 3 3)
+    (drill 1.3)
+    (layers "*.Cu" "*.Mask")
+  )
+
+  (pad "14" thru_hole circle
+    (at 17.78 -17.78)
+    (size 3 3)
+    (drill 1.3)
+    (layers "*.Cu" "*.Mask")
+  )
+  (pad "13" thru_hole circle
+    (at 17.78 -12.7)
+    (size 3 3)
+    (drill 1.3)
+    (layers "*.Cu" "*.Mask")
+  )
+  (pad "12" thru_hole circle
+    (at 17.78 12.7)
+    (size 3 3)
+    (drill 1.3)
+    (layers "*.Cu" "*.Mask")
+  )
+  (pad "11" thru_hole circle
+    (at 17.78 17.78)
+    (size 3 3)
+    (drill 1.3)
+    (layers "*.Cu" "*.Mask")
+  )
 )
