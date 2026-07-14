@@ -1,0 +1,99 @@
+(kicad_symbol_lib
+  (version 20231120)
+  (generator "pcb-psu-led-rev-0.2")
+  (symbol "Talema_70000K_1p6VA"
+    (pin_names (offset 1.016))
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (property "Reference" "T"
+      (at 0 12.7 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "Talema_70000K_1p6VA"
+      (at 0 10.16 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "footprints:Talema_70000K_1p6VA"
+      (at 0 0 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "https://talema.com/products/low-profile-pcb-mounting-1-6va-to-50va-7000k/"
+      (at 0 0 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Description" "Talema 70000K, 1.6 VA, dual 115 V primary, dual 7 V secondary"
+      (at 0 0 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+
+    (symbol "Talema_70000K_1p6VA_0_1"
+      (rectangle
+        (start -7.62 8.89)
+        (end 7.62 -8.89)
+        (stroke (width 0.254) (type default))
+        (fill (type background))
+      )
+      (text "PRIMARY"
+        (at -3.81 0 90)
+        (effects (font (size 1.016 1.016)))
+      )
+      (text "SECONDARY"
+        (at 3.81 0 90)
+        (effects (font (size 1.016 1.016)))
+      )
+    )
+
+    (symbol "Talema_70000K_1p6VA_1_1"
+      (pin passive line
+        (at -12.7 7.62 0)
+        (length 5.08)
+        (name "P1_START" (effects (font (size 1.27 1.27))))
+        (number "6" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at -12.7 2.54 0)
+        (length 5.08)
+        (name "P1_END" (effects (font (size 1.27 1.27))))
+        (number "5" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at -12.7 -2.54 0)
+        (length 5.08)
+        (name "P2_START" (effects (font (size 1.27 1.27))))
+        (number "4" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at -12.7 -7.62 0)
+        (length 5.08)
+        (name "P2_END" (effects (font (size 1.27 1.27))))
+        (number "3" (effects (font (size 1.27 1.27))))
+      )
+
+      (pin passive line
+        (at 12.7 7.62 180)
+        (length 5.08)
+        (name "S1_START" (effects (font (size 1.27 1.27))))
+        (number "11" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at 12.7 2.54 180)
+        (length 5.08)
+        (name "S1_END" (effects (font (size 1.27 1.27))))
+        (number "12" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at 12.7 -2.54 180)
+        (length 5.08)
+        (name "S2_START" (effects (font (size 1.27 1.27))))
+        (number "13" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at 12.7 -7.62 180)
+        (length 5.08)
+        (name "S2_END" (effects (font (size 1.27 1.27))))
+        (number "14" (effects (font (size 1.27 1.27))))
+      )
+    )
+  )
+)
