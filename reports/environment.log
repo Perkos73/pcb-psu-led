@@ -24,8 +24,7 @@ Repository files:
 ./.git/info/exclude
 ./.git/logs/HEAD
 ./.git/shallow
-./.github/workflows/kicad-manufacturing-check.yml
-./.github/workflows/pokaz-raport.yml
+./.github/workflows/kicad-check.yml
 ./.gitignore
 ./README.md
 ./footprints.pretty/Talema_70000K.kicad_mod
@@ -86,14 +85,14 @@ fd5a0db17ede: Download complete
 898e32f0e177: Download complete
 f8f12f6f970e: Verifying Checksum
 f8f12f6f970e: Download complete
+d0b76b7e8d80: Verifying Checksum
+d0b76b7e8d80: Download complete
 591202fea89c: Verifying Checksum
 591202fea89c: Download complete
 30ff91259e4e: Verifying Checksum
 30ff91259e4e: Download complete
 6fe7b24cfb8f: Verifying Checksum
 6fe7b24cfb8f: Download complete
-d0b76b7e8d80: Verifying Checksum
-d0b76b7e8d80: Download complete
 26996d003dd4: Pull complete
 d0b76b7e8d80: Pull complete
 e64c2316cd50: Pull complete
