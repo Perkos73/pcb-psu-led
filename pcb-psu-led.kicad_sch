@@ -6,115 +6,79 @@
   (paper "A4")
   (title_block
     (title "PCB PSU LED")
-    (rev "ECAD-02")
+    (rev "ECAD-03")
     (company "Custom Step-Down PSU 230 V to 100 V")
-    (comment 1 "J1 mains input and T1 primary series connection")
+    (comment 1 "J1 migrated to local project symbol library")
   )
   (lib_symbols
-    (symbol "Connector_Generic:Conn_01x02"
-      (pin_names
-        (offset 1.016)
-        (hide yes)
+    (symbol "PSU_LED:Conn_01x02"
+    (pin_names (offset 1.016) hide)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (in_pos_files yes)
+    (duplicate_pin_numbers_are_jumpers no)
+    (property "Reference" "J"
+      (at 0 3.81 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "Conn_01x02"
+      (at 0 -3.81 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Datasheet" "~"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Description" "Generic 2-pin connector"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "ki_keywords" "connector"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (symbol "Conn_01x02_1_1"
+      (rectangle
+        (start -1.27 2.54)
+        (end 1.27 -2.54)
+        (stroke (width 0.254) (type default))
+        (fill (type background))
       )
-      (exclude_from_sim no)
-      (in_bom yes)
-      (on_board yes)
-      (in_pos_files yes)
-      (duplicate_pin_numbers_are_jumpers no)
-      (property "Reference" "J"
-        (at 0 3.81 0)
-        (show_name no)
-        (do_not_autoplace no)
-        (effects
-          (font (size 1.27 1.27))
-        )
+      (pin passive line
+        (at 5.08 -1.27 180)
+        (length 3.81)
+        (name "Pin_1" (effects (font (size 1.27 1.27))))
+        (number "1" (effects (font (size 1.27 1.27))))
       )
-      (property "Value" "Conn_01x02"
-        (at 0 -3.81 0)
-        (show_name no)
-        (do_not_autoplace no)
-        (effects
-          (font (size 1.27 1.27))
-        )
-      )
-      (property "Footprint" ""
-        (at 0 0 0)
-        (show_name no)
-        (do_not_autoplace no)
-        (hide yes)
-        (effects
-          (font (size 1.27 1.27))
-        )
-      )
-      (property "Datasheet" "~"
-        (at 0 0 0)
-        (show_name no)
-        (do_not_autoplace no)
-        (hide yes)
-        (effects
-          (font (size 1.27 1.27))
-        )
-      )
-      (property "Description" "Generic 2-pin connector"
-        (at 0 0 0)
-        (show_name no)
-        (do_not_autoplace no)
-        (hide yes)
-        (effects
-          (font (size 1.27 1.27))
-        )
-      )
-      (property "ki_keywords" "connector"
-        (at 0 0 0)
-        (show_name no)
-        (do_not_autoplace no)
-        (hide yes)
-        (effects
-          (font (size 1.27 1.27))
-        )
-      )
-      (symbol "Conn_01x02_1_1"
-        (rectangle
-          (start -1.27 2.54)
-          (end 1.27 -2.54)
-          (stroke
-            (width 0.254)
-            (type default)
-          )
-          (fill
-            (type background)
-          )
-        )
-        (pin passive line
-          (at 5.08 -1.27 180)
-          (length 3.81)
-          (name "Pin_1"
-            (effects
-              (font (size 1.27 1.27))
-            )
-          )
-          (number "1"
-            (effects
-              (font (size 1.27 1.27))
-            )
-          )
-        )
-        (pin passive line
-          (at 5.08 1.27 180)
-          (length 3.81)
-          (name "Pin_2"
-            (effects
-              (font (size 1.27 1.27))
-            )
-          )
-          (number "2"
-            (effects
-              (font (size 1.27 1.27))
-            )
-          )
-        )
+      (pin passive line
+        (at 5.08 1.27 180)
+        (length 3.81)
+        (name "Pin_2" (effects (font (size 1.27 1.27))))
+        (number "2" (effects (font (size 1.27 1.27))))
       )
     )
+  )
 (symbol "PSU_LED:Talema_70000K"
     (pin_names (hide yes))
     (exclude_from_sim no)
@@ -527,7 +491,7 @@
     (uuid "45ac9995-4c16-476e-bde0-1f49b4e5e7de")
   )
   (symbol
-    (lib_id "Connector_Generic:Conn_01x02")
+    (lib_id "PSU_LED:Conn_01x02")
     (at 72.39 101.6 0)
     (unit 1)
     (exclude_from_sim no)
