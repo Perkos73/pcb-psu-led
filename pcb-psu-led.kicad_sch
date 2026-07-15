@@ -5,14 +5,14 @@
   (uuid "a08e89e5-29a6-4ee5-b521-7a214388ab56")
   (paper "A4")
   (title_block
-    (title "PCB PSU LED")
-    (rev "ECAD-07")
-    (company "Custom Step-Down PSU 230 V to 100 V")
-    (comment 1 "J1 canonical pin order without instance mirroring")
-  )
-  (lib_symbols
-    (symbol "PSU_LED:Conn_01x02"
-    (pin_names (offset 1.016) hide)
+  (title "PCB PSU LED")
+  (rev "ECAD-08")
+  (company "Custom Step-Down PSU 230 V to 100 V")
+  (comment 1 "J1 pin_names hide token normalized to KiCad 10 form")
+)
+(lib_symbols
+  (symbol "PSU_LED:Conn_01x02"
+    (pin_names (offset 1.016) (hide yes))
     (exclude_from_sim no)
     (in_bom yes)
     (on_board yes)
