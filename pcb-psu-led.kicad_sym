@@ -321,7 +321,7 @@
   )
 
   (symbol "Conn_01x02"
-    (pin_names (offset 1.016) (hide yes))
+    (pin_names (offset 1.016) hide)
     (exclude_from_sim no)
     (in_bom yes)
     (on_board yes)
@@ -387,6 +387,5 @@
         (number "2" (effects (font (size 1.27 1.27))))
       )
     )
-    (embedded_fonts no)
   )
 )
