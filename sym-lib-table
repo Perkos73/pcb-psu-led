@@ -1,0 +1,10 @@
+(sym_lib_table
+  (version 7)
+  (lib
+    (name "PSU_LED")
+    (type "KiCad")
+    (uri "${KIPRJMOD}/pcb-psu-led.kicad_sym")
+    (options "")
+    (descr "Project symbol library for PCB PSU LED")
+  )
+)
