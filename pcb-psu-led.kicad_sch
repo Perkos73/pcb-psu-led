@@ -6,11 +6,115 @@
   (paper "A4")
   (title_block
     (title "PCB PSU LED")
-    (rev "ECAD-01")
+    (rev "ECAD-02")
     (company "Custom Step-Down PSU 230 V to 100 V")
-    (comment 1 "T1 library and footprint integration checkpoint")
+    (comment 1 "J1 mains input and T1 primary series connection")
   )
   (lib_symbols
+    (symbol "Connector_Generic:Conn_01x02"
+      (pin_names
+        (offset 1.016)
+        (hide yes)
+      )
+      (exclude_from_sim no)
+      (in_bom yes)
+      (on_board yes)
+      (in_pos_files yes)
+      (duplicate_pin_numbers_are_jumpers no)
+      (property "Reference" "J"
+        (at 0 3.81 0)
+        (show_name no)
+        (do_not_autoplace no)
+        (effects
+          (font (size 1.27 1.27))
+        )
+      )
+      (property "Value" "Conn_01x02"
+        (at 0 -3.81 0)
+        (show_name no)
+        (do_not_autoplace no)
+        (effects
+          (font (size 1.27 1.27))
+        )
+      )
+      (property "Footprint" ""
+        (at 0 0 0)
+        (show_name no)
+        (do_not_autoplace no)
+        (hide yes)
+        (effects
+          (font (size 1.27 1.27))
+        )
+      )
+      (property "Datasheet" "~"
+        (at 0 0 0)
+        (show_name no)
+        (do_not_autoplace no)
+        (hide yes)
+        (effects
+          (font (size 1.27 1.27))
+        )
+      )
+      (property "Description" "Generic 2-pin connector"
+        (at 0 0 0)
+        (show_name no)
+        (do_not_autoplace no)
+        (hide yes)
+        (effects
+          (font (size 1.27 1.27))
+        )
+      )
+      (property "ki_keywords" "connector"
+        (at 0 0 0)
+        (show_name no)
+        (do_not_autoplace no)
+        (hide yes)
+        (effects
+          (font (size 1.27 1.27))
+        )
+      )
+      (symbol "Conn_01x02_1_1"
+        (rectangle
+          (start -1.27 2.54)
+          (end 1.27 -2.54)
+          (stroke
+            (width 0.254)
+            (type default)
+          )
+          (fill
+            (type background)
+          )
+        )
+        (pin passive line
+          (at 5.08 -1.27 180)
+          (length 3.81)
+          (name "Pin_1"
+            (effects
+              (font (size 1.27 1.27))
+            )
+          )
+          (number "1"
+            (effects
+              (font (size 1.27 1.27))
+            )
+          )
+        )
+        (pin passive line
+          (at 5.08 1.27 180)
+          (length 3.81)
+          (name "Pin_2"
+            (effects
+              (font (size 1.27 1.27))
+            )
+          )
+          (number "2"
+            (effects
+              (font (size 1.27 1.27))
+            )
+          )
+        )
+      )
+    )
 (symbol "PSU_LED:Talema_70000K"
     (pin_names (hide yes))
     (exclude_from_sim no)
@@ -330,22 +434,6 @@
   )
   )
   (no_connect
-    (at 93.98 93.98)
-    (uuid "5d476ebd-f3ed-44d2-9f34-666005de06a5")
-  )
-  (no_connect
-    (at 93.98 99.06)
-    (uuid "ed85e461-0232-459d-bb96-9201f99a58f1")
-  )
-  (no_connect
-    (at 93.98 104.14)
-    (uuid "699094c3-ed63-405c-910e-69f350a9046e")
-  )
-  (no_connect
-    (at 93.98 109.22)
-    (uuid "01901b96-41cd-4a0a-9502-9fbc94bf87fe")
-  )
-  (no_connect
     (at 109.22 93.98)
     (uuid "cb789a8b-f18e-4154-9fbe-820d7f632a4a")
   )
@@ -360,6 +448,155 @@
   (no_connect
     (at 109.22 109.22)
     (uuid "c1155a65-8cc6-4604-a64d-e803a6d6818a")
+  )
+  (wire
+    (pts (xy 77.47 100.33) (xy 83.82 100.33))
+    (stroke
+      (width 0)
+      (type default)
+    )
+    (uuid "d76492fc-9e50-4a96-b0f6-f7561faf33e3")
+  )
+  (wire
+    (pts (xy 83.82 100.33) (xy 83.82 93.98))
+    (stroke
+      (width 0)
+      (type default)
+    )
+    (uuid "47c6f3fd-50e9-497c-ada1-1eeab5fddd04")
+  )
+  (wire
+    (pts (xy 83.82 93.98) (xy 93.98 93.98))
+    (stroke
+      (width 0)
+      (type default)
+    )
+    (uuid "d3348e49-279c-4333-9f0e-1c6546687d8b")
+  )
+  (wire
+    (pts (xy 77.47 102.87) (xy 86.36 102.87))
+    (stroke
+      (width 0)
+      (type default)
+    )
+    (uuid "9737d342-9044-474d-abc8-06d8c446a21c")
+  )
+  (wire
+    (pts (xy 86.36 102.87) (xy 86.36 109.22))
+    (stroke
+      (width 0)
+      (type default)
+    )
+    (uuid "dd9004a2-d51f-453d-8ab6-54592ac2ec4a")
+  )
+  (wire
+    (pts (xy 86.36 109.22) (xy 93.98 109.22))
+    (stroke
+      (width 0)
+      (type default)
+    )
+    (uuid "e96e7658-a550-4f9d-b485-36747b7032b4")
+  )
+  (wire
+    (pts (xy 93.98 99.06) (xy 93.98 104.14))
+    (stroke
+      (width 0)
+      (type default)
+    )
+    (uuid "3c53944d-ccbc-4803-930c-173c2dcf5b2f")
+  )
+  (label "L_SW"
+    (at 83.82 93.98 0)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "10e7b99f-19b8-409d-82e5-451bf2a717d0")
+  )
+  (label "N_SW"
+    (at 86.36 109.22 0)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "93e42a05-7910-409c-82e6-03f1c986adf8")
+  )
+  (label "PRI_LINK_5_4"
+    (at 93.98 101.6 90)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "45ac9995-4c16-476e-bde0-1f49b4e5e7de")
+  )
+  (symbol
+    (lib_id "Connector_Generic:Conn_01x02")
+    (at 72.39 101.6 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced yes)
+    (uuid "34aac67d-1739-482a-b30a-2f70e27d8e02")
+    (property "Reference" "J1"
+      (at 72.39 97.79 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Value" "MAINS INPUT 230V"
+      (at 72.39 105.41 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Footprint" ""
+      (at 72.39 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Datasheet" "~"
+      (at 72.39 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Description" "2-pin mains input from NKK switch; exact Phoenix Contact part pending"
+      (at 72.39 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Manufacturer" "Phoenix Contact"
+      (at 72.39 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "MPN" "TBD"
+      (at 72.39 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (pin "1"
+      (uuid "28f8d81f-f6f4-4d01-bb33-f2ae343e44dd")
+    )
+    (pin "2"
+      (uuid "ca9f43b6-9470-4c9f-ac8e-505fef9b71b8")
+    )
+    (instances
+      (project "pcb-psu-led"
+        (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
+          (reference "J1")
+          (unit 1)
+        )
+      )
+    )
   )
   (symbol
     (lib_id "PSU_LED:Talema_70000K")
