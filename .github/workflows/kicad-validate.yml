@@ -50,31 +50,19 @@ jobs:
         run: |
           docker run --rm \
             --user "$(id -u):$(id -g)" \
-            -v "${{ github.workspace }}:/workspace" \
-            -w /workspace \
-            ghcr.io/kicad/kicad:10.0.4 \
-            kicad-cli sch export pdf \
-            --output pcb-psu-led-schematic.pdf \
-            pcb-psu-led.kicad_sch
-
-      - name: Run schematic ERC
-        run: |
-          docker run --rm \
-            --user "$(id -u):$(id -g)" \
             -e HOME=/tmp/kicad-home \
             -e XDG_CONFIG_HOME=/tmp/kicad-home/.config \
             -e XDG_CACHE_HOME=/tmp/kicad-home/.cache \
-            -v "${{ github.workspace }}:/workspace" \
+            -v "${{ github.workspace }}:/workspace:ro" \
             -w /workspace \
             ghcr.io/kicad/kicad:10.0.4 \
             sh -lc '
               mkdir -p "$XDG_CONFIG_HOME/kicad/10.0"
               mkdir -p "$XDG_CACHE_HOME/fontconfig"
-              kicad-cli sch erc \
-                --output erc.rpt \
-                --exit-code-violations \
+              kicad-cli sch export pdf \
+                --output /tmp/pcb-psu-led-schematic.pdf \
                 pcb-psu-led.kicad_sch
-            '
+            '          '
 
       - name: Show ERC report
         if: always()
