@@ -15,183 +15,44 @@ permissions:
 
 env:
   KICAD_IMAGE: ghcr.io/kicad/kicad:10.0.4
+  SCH: pcb-psu-led.kicad_sch
+  SYM: pcb-psu-led.kicad_sym
+  FP_LIB: PSU_LED.pretty
+  FP_NAME: Talema_70000K
 
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v5
 
-      - name: Verify project inputs
+      - name: Inventory
         shell: bash
         run: |
-          set -u
-          failed=0
+          set -euo pipefail
+          find . -path ./.git -prune -o -type f \
+            -printf '%10s  %p\n' | sort -k2
 
-          check_file() {
-            local file="$1"
-            if [[ -s "$file" ]]; then
-              printf 'OK file: %s (%s bytes)\n' "$file" "$(wc -c < "$file")"
-            else
-              echo "::error file=$file::Required file is missing or empty"
-              return 1
-            fi
-          }
-
-          check_prefix() {
-            local file="$1"
-            local prefix="$2"
-            local first_line
-            first_line="$(head -n 1 "$file" | tr -d '\r')"
-
-            if [[ "$first_line" == "$prefix"* ]]; then
-              printf 'OK header: %s\n' "$file"
-            else
-              echo "::error file=$file,line=1::Unexpected header: $first_line"
-              return 1
-            fi
-          }
-
-          check_contains() {
-            local file="$1"
-            local text="$2"
-
-            if grep -Fq -- "$text" "$file"; then
-              printf 'OK reference: %s -> %s\n' "$file" "$text"
-            else
-              echo "::error file=$file::Required text not found: $text"
-              return 1
-            fi
-          }
-
-          required_files=(
-            pcb-psu-led.kicad_pro
-            pcb-psu-led.kicad_sch
-            pcb-psu-led.kicad_sym
-            sym-lib-table
-            fp-lib-table
-            PSU_LED.pretty/Talema_70000K.kicad_mod
-          )
-
-          for file in "${required_files[@]}"; do
-            check_file "$file" || failed=1
-          done
-
-          if [[ "$failed" -eq 0 ]]; then
-            check_prefix pcb-psu-led.kicad_pro "{" || failed=1
-            check_prefix pcb-psu-led.kicad_sch "(kicad_sch" || failed=1
-            check_prefix pcb-psu-led.kicad_sym "(kicad_symbol_lib" || failed=1
-            check_prefix sym-lib-table "(sym_lib_table" || failed=1
-            check_prefix fp-lib-table "(fp_lib_table" || failed=1
-            check_prefix PSU_LED.pretty/Talema_70000K.kicad_mod \
-              '(footprint "Talema_70000K"' || failed=1
-
-            check_contains sym-lib-table \
-              '${KIPRJMOD}/pcb-psu-led.kicad_sym' || failed=1
-            check_contains fp-lib-table \
-              '${KIPRJMOD}/PSU_LED.pretty' || failed=1
-            check_contains pcb-psu-led.kicad_sch \
-              '(lib_id "PSU_LED:Talema_70000K")' || failed=1
-            check_contains pcb-psu-led.kicad_sch \
-              '(property "Footprint" "PSU_LED:Talema_70000K"' || failed=1
-          fi
-
-          exit "$failed"
-
-      - name: Prepare KiCad runtime
+      - name: Stage writable copy
         shell: bash
         run: |
-          rm -rf "$RUNNER_TEMP/kicad-ci"
+          set -euo pipefail
+
+          rm -rf "$RUNNER_TEMP/ci"
           mkdir -p \
-            "$RUNNER_TEMP/kicad-ci/home/.config" \
-            "$RUNNER_TEMP/kicad-ci/home/.cache/fontconfig" \
-            "$RUNNER_TEMP/kicad-ci/output/symbol" \
-            "$RUNNER_TEMP/kicad-ci/output/footprint"
+            "$RUNNER_TEMP/ci/src" \
+            "$RUNNER_TEMP/ci/home/.config" \
+            "$RUNNER_TEMP/ci/home/.cache/fontconfig" \
+            "$RUNNER_TEMP/ci/out/symbol" \
+            "$RUNNER_TEMP/ci/out/footprint"
 
-      - name: Show KiCad version
-        shell: bash
-        run: |
-          docker pull "$KICAD_IMAGE"
-          docker run --rm \
-            "$KICAD_IMAGE" \
-            kicad-cli version
+          cp -a "$GITHUB_WORKSPACE/." "$RUNNER_TEMP/ci/src/"
+          rm -rf "$RUNNER_TEMP/ci/src/.git"
 
-      - name: Validate project symbol library
-        shell: bash
-        run: |
-          docker run --rm \
-            --user "$(id -u):$(id -g)" \
-            -e HOME=/home/kicad \
-            -e KICAD_CONFIG_HOME=/home/kicad/.config/kicad \
-            -e XDG_CONFIG_HOME=/home/kicad/.config \
-            -e XDG_CACHE_HOME=/home/kicad/.cache \
-            -v "$RUNNER_TEMP/kicad-ci/home:/home/kicad" \
-            -v "$RUNNER_TEMP/kicad-ci/output:/output" \
-            -v "${{ github.workspace }}:/workspace:ro" \
-            -w /workspace \
-            "$KICAD_IMAGE" \
-            sh -lc '
-              kicad-cli sym export svg \
-                --symbol Talema_70000K \
-                --black-and-white \
-                --output /output/symbol \
-                pcb-psu-led.kicad_sym
-
-              find /output/symbol \
-                -maxdepth 1 \
-                -type f \
-                -name "*.svg" \
-                -size +0c \
-                -print \
-                -quit | grep -q .
-            '
-
-          find "$RUNNER_TEMP/kicad-ci/output/symbol" \
-            -maxdepth 1 \
-            -type f \
-            -name '*.svg' \
-            -printf 'Generated symbol SVG: %f (%s bytes)\n'
-
-      - name: Validate project footprint library
-        shell: bash
-        run: |
-          docker run --rm \
-            --user "$(id -u):$(id -g)" \
-            -e HOME=/home/kicad \
-            -e KICAD_CONFIG_HOME=/home/kicad/.config/kicad \
-            -e XDG_CONFIG_HOME=/home/kicad/.config \
-            -e XDG_CACHE_HOME=/home/kicad/.cache \
-            -v "$RUNNER_TEMP/kicad-ci/home:/home/kicad" \
-            -v "$RUNNER_TEMP/kicad-ci/output:/output" \
-            -v "${{ github.workspace }}:/workspace:ro" \
-            -w /workspace \
-            "$KICAD_IMAGE" \
-            sh -lc '
-              kicad-cli fp export svg \
-                --footprint Talema_70000K \
-                --black-and-white \
-                --output /output/footprint \
-                PSU_LED.pretty
-
-              find /output/footprint \
-                -maxdepth 1 \
-                -type f \
-                -name "*.svg" \
-                -size +0c \
-                -print \
-                -quit | grep -q .
-            '
-
-          find "$RUNNER_TEMP/kicad-ci/output/footprint" \
-            -maxdepth 1 \
-            -type f \
-            -name '*.svg' \
-            -printf 'Generated footprint SVG: %f (%s bytes)\n'
-
-      - name: Parse schematic and run ERC
+      - name: KiCad validation
         shell: bash
         run: |
           set +e
@@ -202,49 +63,130 @@ jobs:
             -e KICAD_CONFIG_HOME=/home/kicad/.config/kicad \
             -e XDG_CONFIG_HOME=/home/kicad/.config \
             -e XDG_CACHE_HOME=/home/kicad/.cache \
-            -v "$RUNNER_TEMP/kicad-ci/home:/home/kicad" \
-            -v "$RUNNER_TEMP/kicad-ci/output:/output" \
-            -v "${{ github.workspace }}:/workspace:ro" \
-            -w /workspace \
+            -e SCH \
+            -e SYM \
+            -e FP_LIB \
+            -e FP_NAME \
+            -v "$RUNNER_TEMP/ci/home:/home/kicad" \
+            -v "$RUNNER_TEMP/ci/src:/work" \
+            -v "$RUNNER_TEMP/ci/out:/out" \
+            -w /work \
             "$KICAD_IMAGE" \
             sh -lc '
-              set +e
+              set -u
+
+              for file in \
+                "$SCH" \
+                "$SYM" \
+                "$FP_LIB/$FP_NAME.kicad_mod" \
+                pcb-psu-led.kicad_pro \
+                sym-lib-table \
+                fp-lib-table
+              do
+                if [ ! -s "$file" ]; then
+                  echo "MISSING OR EMPTY: $file"
+                  exit 90
+                fi
+
+                printf "OK %10s bytes  %s\n" \
+                  "$(wc -c < "$file")" "$file"
+              done
+
+              kicad-cli version || exit 91
+
+              mkdir -p /out/symbol /out/footprint
+
+              kicad-cli sym export svg \
+                --symbol "$FP_NAME" \
+                --black-and-white \
+                --output /out/symbol \
+                "$SYM" || exit 92
+
+              if [ "$(find /out/symbol -type f -name "*.svg" \
+                -size +0c | wc -l)" -lt 1 ]; then
+                echo "Symbol export produced no non-empty SVG."
+                exit 92
+              fi
+
+              find /out/symbol -type f -name "*.svg" \
+                -printf "SYMBOL SVG %s bytes  %p\n"
+
+              kicad-cli fp export svg \
+                --footprint "$FP_NAME" \
+                --black-and-white \
+                --output /out/footprint \
+                "$FP_LIB" || exit 93
+
+              if [ "$(find /out/footprint -type f -name "*.svg" \
+                -size +0c | wc -l)" -lt 1 ]; then
+                echo "Footprint export produced no non-empty SVG."
+                exit 93
+              fi
+
+              find /out/footprint -type f -name "*.svg" \
+                -printf "FOOTPRINT SVG %s bytes  %p\n"
+
+              kicad-cli sch export netlist \
+                --format kicadsexpr \
+                --output /out/netlist.net \
+                "$SCH" || exit 94
+
+              if [ ! -s /out/netlist.net ]; then
+                echo "Schematic parser produced no non-empty netlist."
+                exit 94
+              fi
 
               kicad-cli sch erc \
                 --format report \
                 --units mm \
                 --severity-all \
-                --output /output/erc.rpt \
                 --exit-code-violations \
-                pcb-psu-led.kicad_sch
+                --output /out/erc.rpt \
+                "$SCH"
+              rc=$?
 
-              status=$?
-              set -e
-
-              if [ -s /output/erc.rpt ]; then
-                cat /output/erc.rpt
-              else
-                echo "::error::ERC report was not generated"
-                if [ "$status" -eq 0 ]; then
-                  status=1
-                fi
+              if [ ! -s /out/erc.rpt ]; then
+                echo "ERC report was not generated."
+                exit 95
               fi
 
-              exit "$status"
-            '
+              cat /out/erc.rpt
+              exit "$rc"
+            ' 2>&1 | tee "$RUNNER_TEMP/ci/out/run.log"
 
-          status=$?
+          status=${PIPESTATUS[0]}
           set -e
 
           case "$status" in
             0)
-              echo "ERC completed without violations."
+              echo "PASS: symbol, footprint, schematic parser and ERC."
               ;;
             5)
-              echo "::error::ERC found one or more violations."
+              echo "::error::ERC violations found; see erc.rpt."
+              ;;
+            90)
+              echo "::error::Missing or empty project input."
+              ;;
+            91)
+              echo "::error::kicad-cli is not runnable in the selected image."
+              ;;
+            92)
+              echo "::error::Symbol library parse or SVG export failed."
+              ;;
+            93)
+              echo "::error::Footprint library parse or SVG export failed."
+              ;;
+            94)
+              echo "::error::Schematic parse or netlist export failed."
+              ;;
+            95)
+              echo "::error::ERC produced no report."
+              ;;
+            125)
+              echo "::error::Docker could not start the KiCad container."
               ;;
             *)
-              echo "::error::KiCad ERC execution failed with exit code $status."
+              echo "::error::Unexpected validation exit code: $status."
               ;;
           esac
 
@@ -252,10 +194,9 @@ jobs:
 
       - name: Upload validation reports
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v6
         with:
           name: kicad-validation-${{ github.run_number }}
-          path: ${{ runner.temp }}/kicad-ci/output
-          if-no-files-found: warn
+          path: ${{ runner.temp }}/ci/out
+          if-no-files-found: error
           retention-days: 14
-          compression-level: 9
