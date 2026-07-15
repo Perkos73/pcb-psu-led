@@ -1,0 +1,26 @@
+name: KiCad Validate
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/kicad/kicad:10.0.4
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show KiCad version
+        run: kicad-cli version
+
+      - name: Validate schematic file
+        run: |
+          test -f pcb-psu-led.kicad_sch
+          kicad-cli sch export pdf pcb-psu-led.kicad_sch \
+            --output pcb-psu-led-schematic.pdf
