@@ -14,7 +14,8 @@ permissions:
   contents: read
 
 env:
-  KICAD_IMAGE: ghcr.io/kicad/kicad:10.0.4
+  KICAD_IMAGE: ghcr.io/kicad/kicad:10.0-full
+  KICAD_EXPECTED: "10.0."
   SCH: pcb-psu-led.kicad_sch
   SYM: pcb-psu-led.kicad_sym
   FP_LIB: PSU_LED.pretty
@@ -27,7 +28,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Inventory
         shell: bash
@@ -52,7 +53,38 @@ jobs:
           cp -a "$GITHUB_WORKSPACE/." "$RUNNER_TEMP/ci/src/"
           rm -rf "$RUNNER_TEMP/ci/src/.git"
 
+      - name: Resolve and verify KiCad image
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if ! docker pull "$KICAD_IMAGE"; then
+            echo "::error::Image tag not published or unavailable: $KICAD_IMAGE"
+            exit 125
+          fi
+
+          version="$(
+            docker run --rm \
+              "$KICAD_IMAGE" \
+              kicad-cli version 2>&1 | tr -d '\r'
+          )"
+
+          echo "kicad-cli version: $version"
+          printf '%s\n' "$version" \
+            > "$RUNNER_TEMP/ci/out/kicad-version.txt"
+
+          case "$version" in
+            "$KICAD_EXPECTED"*)
+              echo "KiCad image is within the frozen 10.0 series."
+              ;;
+            *)
+              echo "::error::Expected KiCad series ${KICAD_EXPECTED}x, image reports: $version"
+              exit 96
+              ;;
+          esac
+
       - name: KiCad validation
+        id: kicad_validation
         shell: bash
         run: |
           set +e
@@ -72,7 +104,7 @@ jobs:
             -v "$RUNNER_TEMP/ci/out:/out" \
             -w /work \
             "$KICAD_IMAGE" \
-            sh -lc '
+            bash -lc '
               set -u
 
               for file in \
@@ -102,13 +134,19 @@ jobs:
                 --output /out/symbol \
                 "$SYM" || exit 92
 
-              if [ "$(find /out/symbol -type f -name "*.svg" \
-                -size +0c | wc -l)" -lt 1 ]; then
+              if [ "$(
+                find /out/symbol \
+                  -type f \
+                  -name "*.svg" \
+                  -size +0c | wc -l
+              )" -lt 1 ]; then
                 echo "Symbol export produced no non-empty SVG."
                 exit 92
               fi
 
-              find /out/symbol -type f -name "*.svg" \
+              find /out/symbol \
+                -type f \
+                -name "*.svg" \
                 -printf "SYMBOL SVG %s bytes  %p\n"
 
               kicad-cli fp export svg \
@@ -117,13 +155,19 @@ jobs:
                 --output /out/footprint \
                 "$FP_LIB" || exit 93
 
-              if [ "$(find /out/footprint -type f -name "*.svg" \
-                -size +0c | wc -l)" -lt 1 ]; then
+              if [ "$(
+                find /out/footprint \
+                  -type f \
+                  -name "*.svg" \
+                  -size +0c | wc -l
+              )" -lt 1 ]; then
                 echo "Footprint export produced no non-empty SVG."
                 exit 93
               fi
 
-              find /out/footprint -type f -name "*.svg" \
+              find /out/footprint \
+                -type f \
+                -name "*.svg" \
                 -printf "FOOTPRINT SVG %s bytes  %p\n"
 
               kicad-cli sch export netlist \
@@ -136,65 +180,161 @@ jobs:
                 exit 94
               fi
 
-              kicad-cli sch erc \
+              if ! kicad-cli sch erc \
                 --format report \
                 --units mm \
                 --severity-all \
+                --output /out/erc-full.rpt \
+                "$SCH"
+              then
+                echo "Full ERC report command failed."
+                exit 95
+              fi
+
+              if [ ! -s /out/erc-full.rpt ]; then
+                echo "Full ERC report was not generated."
+                exit 95
+              fi
+
+              echo "--- ERC full report: all severities ---"
+              cat /out/erc-full.rpt
+
+              set +e
+              kicad-cli sch erc \
+                --format report \
+                --units mm \
+                --severity-error \
                 --exit-code-violations \
                 --output /out/erc.rpt \
                 "$SCH"
               rc=$?
+              set -e
 
               if [ ! -s /out/erc.rpt ]; then
-                echo "ERC report was not generated."
+                echo "ERC gating report was not generated."
                 exit 95
               fi
 
+              echo "--- ERC gating report: errors only ---"
               cat /out/erc.rpt
+
               exit "$rc"
             ' 2>&1 | tee "$RUNNER_TEMP/ci/out/run.log"
 
           status=${PIPESTATUS[0]}
           set -e
 
+          printf '%s\n' "$status" \
+            > "$RUNNER_TEMP/ci/out/exit-status.txt"
+
+          tail_msg="$(
+            tail -n 25 "$RUNNER_TEMP/ci/out/run.log" \
+              | tr '\n' '|' \
+              | cut -c1-800
+          )"
+
+          if [ -z "$tail_msg" ]; then
+            tail_msg="(container produced no output)"
+          fi
+
           case "$status" in
             0)
-              echo "PASS: symbol, footprint, schematic parser and ERC."
+              echo "PASS: symbol, footprint, schematic parser and error-level ERC."
               ;;
             5)
-              echo "::error::ERC violations found; see erc.rpt."
+              echo "::error::ERC errors found (exit 5) :: $tail_msg"
               ;;
             90)
-              echo "::error::Missing or empty project input."
+              echo "::error::Missing or empty project input (exit 90) :: $tail_msg"
               ;;
             91)
-              echo "::error::kicad-cli is not runnable in the selected image."
+              echo "::error::kicad-cli not runnable (exit 91) :: $tail_msg"
               ;;
             92)
-              echo "::error::Symbol library parse or SVG export failed."
+              echo "::error::Symbol library parse/export failed (exit 92) :: $tail_msg"
               ;;
             93)
-              echo "::error::Footprint library parse or SVG export failed."
+              echo "::error::Footprint library parse/export failed (exit 93) :: $tail_msg"
               ;;
             94)
-              echo "::error::Schematic parse or netlist export failed."
+              echo "::error::Schematic parser/netlist export failed (exit 94) :: $tail_msg"
               ;;
             95)
-              echo "::error::ERC produced no report."
+              echo "::error::ERC report generation failed (exit 95) :: $tail_msg"
+              ;;
+            96)
+              echo "::error::Unexpected KiCad version series (exit 96) :: $tail_msg"
               ;;
             125)
-              echo "::error::Docker could not start the KiCad container."
+              echo "::error::Docker could not start the container (exit 125) :: $tail_msg"
               ;;
             *)
-              echo "::error::Unexpected validation exit code: $status."
+              echo "::error::Unexpected validation exit $status :: $tail_msg"
               ;;
           esac
 
           exit "$status"
 
+      - name: Publish validation summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "# KiCad validation"
+            echo
+
+            if [ -s "$RUNNER_TEMP/ci/out/kicad-version.txt" ]; then
+              echo "**KiCad:** \`$(cat "$RUNNER_TEMP/ci/out/kicad-version.txt")\`"
+            else
+              echo "**KiCad:** version unavailable"
+            fi
+
+            if [ -s "$RUNNER_TEMP/ci/out/exit-status.txt" ]; then
+              echo
+              echo "**Validation exit code:** \`$(cat "$RUNNER_TEMP/ci/out/exit-status.txt")\`"
+            fi
+
+            echo
+            echo "## ERC gating report — errors only"
+            echo
+            echo '```text'
+            if [ -s "$RUNNER_TEMP/ci/out/erc.rpt" ]; then
+              cat "$RUNNER_TEMP/ci/out/erc.rpt"
+            else
+              echo "ERC gating report was not generated."
+            fi
+            echo '```'
+
+            echo
+            echo "<details>"
+            echo "<summary>Full ERC report — all severities</summary>"
+            echo
+            echo '```text'
+            if [ -s "$RUNNER_TEMP/ci/out/erc-full.rpt" ]; then
+              cat "$RUNNER_TEMP/ci/out/erc-full.rpt"
+            else
+              echo "Full ERC report was not generated."
+            fi
+            echo '```'
+            echo "</details>"
+
+            echo
+            echo "<details>"
+            echo "<summary>Validation log tail</summary>"
+            echo
+            echo '```text'
+            if [ -s "$RUNNER_TEMP/ci/out/run.log" ]; then
+              tail -n 50 "$RUNNER_TEMP/ci/out/run.log"
+            else
+              echo "Validation log was not generated."
+            fi
+            echo '```'
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Upload validation reports
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: kicad-validation-${{ github.run_number }}
           path: ${{ runner.temp }}/ci/out
