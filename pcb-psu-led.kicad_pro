@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "filename": "pcb-psu-led.kicad_pro",
+    "version": 3
+  },
+  "libraries": {
+    "pinned_footprint_libs": [],
+    "pinned_symbol_libs": []
+  },
+  "schematic": {
+    "legacy_lib_dir": "",
+    "legacy_lib_list": []
+  },
+  "sheets": [
+    [
+      "a08e89e5-29a6-4ee5-b521-7a214388ab56",
+      "Root"
+    ]
+  ],
+  "text_variables": {}
+}
