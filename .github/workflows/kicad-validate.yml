@@ -19,7 +19,24 @@ jobs:
           docker run --rm \
             ghcr.io/kicad/kicad:10.0.4 \
             kicad-cli version
+            
+      - name: Validate project symbol library
+        if: ${{ hashFiles('pcb-psu-led.kicad_sym') != '' }}
+        run: |
+          mkdir -p validation
 
+          docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            -v "${{ github.workspace }}:/workspace" \
+            -w /workspace \
+            ghcr.io \
+            -v "${{ github.workspace }}:/workspace" \
+            -w //kicad/kicad:10.0.4 \
+            kicad-cli sym upgrade \
+            --force \
+            --output validation/pcb-psu-led.checked.kicad_sym \
+            pcb-psu-led.kicad_sym
+            
       - name: Check schematic syntax
         run: |
           docker run --rm \
