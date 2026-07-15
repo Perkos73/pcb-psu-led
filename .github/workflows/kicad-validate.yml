@@ -20,14 +20,25 @@ jobs:
             ghcr.io/kicad/kicad:10.0.4 \
             kicad-cli version
 
-      - name: Validate schematic file
+            - name: Validate schematic file
         run: |
-          test -f pcb-psu-led.kicad_sch
+          set -o pipefail
 
+          echo "=== Repository files ==="
+          ls -la
+
+          echo "=== Schematic content ==="
+          cat pcb-psu-led.kicad_sch
+
+          echo "=== KiCad PDF export ==="
           docker run --rm \
             -v "${{ github.workspace }}:/workspace" \
             -w /workspace \
             ghcr.io/kicad/kicad:10.0.4 \
             kicad-cli sch export pdf \
+            --output pcb-psu-led-schematic.pdf \
             pcb-psu-led.kicad_sch \
-            --output pcb-psu-led-schematic.pdf
+            2>&1 | tee kicad-validation.log
+
+          echo "=== Generated files ==="
+          ls -la
