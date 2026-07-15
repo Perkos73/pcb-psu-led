@@ -6,9 +6,9 @@
   (paper "A4")
   (title_block
   (title "PCB PSU LED")
-  (rev "ECAD-08")
+  (rev "ECAD-09")
   (company "Custom Step-Down PSU 230 V to 100 V")
-  (comment 1 "J1 pin_names hide token normalized to KiCad 10 form")
+  (comment 1 "J1 Datasheet placeholder normalized to empty string")
 )
 (lib_symbols
   (symbol "PSU_LED:Conn_01x02"
@@ -37,7 +37,7 @@
       (hide yes)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Datasheet" "~"
+    (property "Datasheet" ""
       (at 0 0 0)
       (show_name no)
       (do_not_autoplace no)
