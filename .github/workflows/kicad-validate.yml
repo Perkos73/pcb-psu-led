@@ -20,25 +20,34 @@ jobs:
             ghcr.io/kicad/kicad:10.0.4 \
             kicad-cli version
 
-            - name: Validate schematic file
+      - name: Check schematic syntax
         run: |
-          set -o pipefail
-
-          echo "=== Repository files ==="
-          ls -la
-
-          echo "=== Schematic content ==="
-          cat pcb-psu-led.kicad_sch
-
-          echo "=== KiCad PDF export ==="
           docker run --rm \
+            --user "$(id -u):$(id -g)" \
             -v "${{ github.workspace }}:/workspace" \
             -w /workspace \
             ghcr.io/kicad/kicad:10.0.4 \
             kicad-cli sch export pdf \
             --output pcb-psu-led-schematic.pdf \
-            pcb-psu-led.kicad_sch \
-            2>&1 | tee kicad-validation.log
+            pcb-psu-led.kicad_sch
 
-          echo "=== Generated files ==="
-          ls -la
+      - name: Run schematic ERC
+        run: |
+          docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            -v "${{ github.workspace }}:/workspace" \
+            -w /workspace \
+            ghcr.io/kicad/kicad:10.0.4 \
+            kicad-cli sch erc \
+            --output erc.rpt \
+            --exit-code-violations \
+            pcb-psu-led.kicad_sch
+
+      - name: Show ERC report
+        if: always()
+        run: |
+          if [ -f erc.rpt ]; then
+            cat erc.rpt
+          else
+            echo "ERC report was not generated."
+          fi
