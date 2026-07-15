@@ -6,9 +6,9 @@
   (paper "A4")
   (title_block
   (title "PCB PSU LED")
-  (rev "ECAD-10")
+  (rev "ECAD-11")
   (company "Custom Step-Down PSU 230 V to 100 V")
-  (comment 1 "C1 47uF 25V reservoir capacitor added")
+  (comment 1 "U1 LM78L05ACZ regulator added")
 )
 (lib_symbols
   (symbol "PSU_LED:Conn_01x02"
@@ -601,6 +601,100 @@
       )
     )
   )
+  (symbol "PSU_LED:LM78L05ACZ"
+    (pin_names (offset 1.016))
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (in_pos_files yes)
+    (duplicate_pin_numbers_are_jumpers no)
+    (property "Reference" "U"
+      (at 0 5.08 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "LM78L05ACZ"
+      (at 0 3.81 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Datasheet" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Description" "5 V positive linear regulator, TO-92; project pinout 1=VOUT, 2=GND, 3=VIN"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Manufacturer" "Texas Instruments"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "MPN" "LM78L05ACZ"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "ki_keywords" "linear regulator 5V TO-92"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (symbol "LM78L05ACZ_0_1"
+      (rectangle
+        (start -5.08 2.54)
+        (end 5.08 -2.54)
+        (stroke (width 0.254) (type default))
+        (fill (type background))
+      )
+      (text "78L05"
+        (at 0 0 0)
+        (effects (font (size 1.27 1.27)))
+      )
+    )
+    (symbol "LM78L05ACZ_1_1"
+      (pin passive line
+        (at 7.62 0 180)
+        (length 2.54)
+        (name "VOUT" (effects (font (size 1.27 1.27))))
+        (number "1" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at 0 -6.35 90)
+        (length 3.81)
+        (name "GND" (effects (font (size 1.27 1.27))))
+        (number "2" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at -7.62 0 0)
+        (length 2.54)
+        (name "VIN" (effects (font (size 1.27 1.27))))
+        (number "3" (effects (font (size 1.27 1.27))))
+      )
+    )
+  )
   )
   (wire
     (pts (xy 77.47 100.33) (xy 83.82 100.33))
@@ -742,6 +836,27 @@
       (font (size 1.27 1.27))
     )
     (uuid "072e66f6-1eff-489f-8846-126e055bb1b7")
+  )
+  (label "VRAW_PLUS"
+    (at 152.4 101.6 0)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "a20542c1-219b-45c5-8d72-f627f0afeb11")
+  )
+  (label "CT_RAW"
+    (at 160.02 107.95 270)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "c1620ea0-f13d-4c42-b70d-b2abdf35fb9e")
+  )
+  (label "PLUS_5V_LED"
+    (at 167.64 101.6 180)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "dcd34743-1c6b-47f4-888c-79863fdbfda6")
   )
   (symbol
     (lib_id "PSU_LED:Conn_01x02")
@@ -946,6 +1061,81 @@
       (project "pcb-psu-led"
         (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
           (reference "D1")
+          (unit 1)
+        )
+      )
+    )
+  )
+  (symbol
+    (lib_id "PSU_LED:LM78L05ACZ")
+    (at 160.02 101.6 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced no)
+    (uuid "55cb6e41-5715-4364-8101-798f8277e683")
+    (property "Reference" "U1"
+      (at 160.02 95.25 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Value" "LM78L05ACZ"
+      (at 160.02 97.79 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Footprint" ""
+      (at 160.02 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Datasheet" ""
+      (at 160.02 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Description" "5 V positive linear regulator, TO-92; project pinout 1=VOUT, 2=GND, 3=VIN"
+      (at 160.02 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Manufacturer" "Texas Instruments"
+      (at 160.02 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "MPN" "LM78L05ACZ"
+      (at 160.02 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (pin "1"
+      (uuid "a7a7747a-caa1-4b9d-8a82-d7822821fa18")
+    )
+    (pin "2"
+      (uuid "f856838b-48b9-41e3-b4d6-d5cc88bb9e52")
+    )
+    (pin "3"
+      (uuid "f561ab76-3509-42ce-81b4-3616a35a1389")
+    )
+    (instances
+      (project "pcb-psu-led"
+        (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
+          (reference "U1")
           (unit 1)
         )
       )
