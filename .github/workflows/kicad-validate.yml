@@ -6,50 +6,66 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Show KiCad version
         run: |
           docker run --rm \
             ghcr.io/kicad/kicad:10.0.4 \
             kicad-cli version
-            
+
       - name: Validate project symbol library
         if: ${{ hashFiles('pcb-psu-led.kicad_sym') != '' }}
         run: |
           docker run --rm \
+            -e HOME=/tmp/kicad-home \
+            -e XDG_CONFIG_HOME=/tmp/kicad-home/.config \
+            -e XDG_CACHE_HOME=/tmp/kicad-home/.cache \
             -v "${{ github.workspace }}:/workspace:ro" \
             -w /workspace \
             ghcr.io/kicad/kicad:10.0.4 \
-            kicad-cli sym export svg \
-            --symbol Talema_70000K \
-            --black-and-white \
-            --output /tmp \
-            pcb-psu-led.kicad_sym
+            sh -lc '
+              mkdir -p "$XDG_CONFIG_HOME/kicad/10.0"
+              mkdir -p "$XDG_CACHE_HOME/fontconfig"
+              kicad-cli sym export svg \
+                --symbol Talema_70000K \
+                --black-and-white \
+                --output /tmp \
+                pcb-psu-led.kicad_sym
+            '
 
       - name: Validate project footprint library
         if: ${{ hashFiles('PSU_LED.pretty/Talema_70000K.kicad_mod') != '' }}
         run: |
           docker run --rm \
+            -e HOME=/tmp/kicad-home \
+            -e XDG_CONFIG_HOME=/tmp/kicad-home/.config \
+            -e XDG_CACHE_HOME=/tmp/kicad-home/.cache \
             -v "${{ github.workspace }}:/workspace:ro" \
             -w /workspace \
             ghcr.io/kicad/kicad:10.0.4 \
-            kicad-cli fp export svg \
-            --footprint Talema_70000K \
-            --black-and-white \
-            --output /tmp \
-            PSU_LED.pretty
-            
+            sh -lc '
+              mkdir -p "$XDG_CONFIG_HOME/kicad/10.0"
+              mkdir -p "$XDG_CACHE_HOME/fontconfig"
+              kicad-cli fp export svg \
+                --footprint Talema_70000K \
+                --black-and-white \
+                --output /tmp \
+                PSU_LED.pretty
+            '
+
       - name: Check schematic syntax
         run: |
           docker run --rm \
-            --user "$(id -u):$(id -g)" \
             -e HOME=/tmp/kicad-home \
             -e XDG_CONFIG_HOME=/tmp/kicad-home/.config \
             -e XDG_CACHE_HOME=/tmp/kicad-home/.cache \
@@ -62,7 +78,26 @@ jobs:
               kicad-cli sch export pdf \
                 --output /tmp/pcb-psu-led-schematic.pdf \
                 pcb-psu-led.kicad_sch
-            '          '
+            '
+
+      - name: Run schematic ERC
+        run: |
+          docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            -e HOME=/tmp/kicad-home \
+            -e XDG_CONFIG_HOME=/tmp/kicad-home/.config \
+            -e XDG_CACHE_HOME=/tmp/kicad-home/.cache \
+            -v "${{ github.workspace }}:/workspace" \
+            -w /workspace \
+            ghcr.io/kicad/kicad:10.0.4 \
+            sh -lc '
+              mkdir -p "$XDG_CONFIG_HOME/kicad/10.0"
+              mkdir -p "$XDG_CACHE_HOME/fontconfig"
+              kicad-cli sch erc \
+                --output erc.rpt \
+                --exit-code-violations \
+                pcb-psu-led.kicad_sch
+            '
 
       - name: Show ERC report
         if: always()
