@@ -6,9 +6,9 @@
   (paper "A4")
   (title_block
   (title "PCB PSU LED")
-  (rev "ECAD-09")
+  (rev "ECAD-10")
   (company "Custom Step-Down PSU 230 V to 100 V")
-  (comment 1 "J1 Datasheet placeholder normalized to empty string")
+  (comment 1 "C1 47uF 25V reservoir capacitor added")
 )
 (lib_symbols
   (symbol "PSU_LED:Conn_01x02"
@@ -410,6 +410,84 @@
     )
     (embedded_fonts no)
   )
+    (symbol "PSU_LED:C_Polarized"
+      (pin_names (offset 1.016))
+      (exclude_from_sim no)
+      (in_bom yes)
+      (on_board yes)
+      (in_pos_files yes)
+      (duplicate_pin_numbers_are_jumpers no)
+      (property "Reference" "C"
+        (at 2.54 1.27 0)
+        (show_name no)
+        (do_not_autoplace no)
+        (effects (font (size 1.27 1.27)))
+      )
+      (property "Value" "C_Polarized"
+        (at 3.81 -1.27 0)
+        (show_name no)
+        (do_not_autoplace no)
+        (effects (font (size 1.27 1.27)))
+      )
+      (property "Footprint" ""
+        (at 0 0 0)
+        (show_name no)
+        (do_not_autoplace no)
+        (hide yes)
+        (effects (font (size 1.27 1.27)))
+      )
+      (property "Datasheet" ""
+        (at 0 0 0)
+        (show_name no)
+        (do_not_autoplace no)
+        (hide yes)
+        (effects (font (size 1.27 1.27)))
+      )
+      (property "Description" "Polarized capacitor"
+        (at 0 0 0)
+        (show_name no)
+        (do_not_autoplace no)
+        (hide yes)
+        (effects (font (size 1.27 1.27)))
+      )
+      (property "ki_keywords" "capacitor polarized electrolytic"
+        (at 0 0 0)
+        (show_name no)
+        (do_not_autoplace no)
+        (hide yes)
+        (effects (font (size 1.27 1.27)))
+      )
+      (symbol "C_Polarized_0_1"
+        (polyline
+          (pts (xy -1.27 0.508) (xy 1.27 0.508))
+          (stroke (width 0.254) (type default))
+          (fill (type none))
+        )
+        (polyline
+          (pts (xy -1.27 -0.508) (xy 1.27 -0.508))
+          (stroke (width 0.254) (type default))
+          (fill (type none))
+        )
+        (text "+"
+          (at 2.032 0.508 0)
+          (effects (font (size 1.016 1.016)))
+        )
+      )
+      (symbol "C_Polarized_1_1"
+        (pin passive line
+          (at 0 5.08 270)
+          (length 4.572)
+          (name "+" (effects (font (size 1.27 1.27))))
+          (number "1" (effects (font (size 1.27 1.27))))
+        )
+        (pin passive line
+          (at 0 -5.08 90)
+          (length 4.572)
+          (name "-" (effects (font (size 1.27 1.27))))
+          (number "2" (effects (font (size 1.27 1.27))))
+        )
+      )
+    )
     (symbol "PSU_LED:BYV26C"
     (pin_numbers (hide yes))
     (pin_names (offset 1.016) (hide yes))
@@ -651,6 +729,20 @@
     (effects (font (size 1.27 1.27)))
     (uuid "636216a7-3716-44ed-bed9-01b2cd9a8968")
   )
+  (label "VRAW_PLUS"
+    (at 134.62 96.52 90)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "cab64541-b402-4d8d-9c66-d7a730bcdf5e")
+  )
+  (label "CT_RAW"
+    (at 134.62 106.68 270)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "072e66f6-1eff-489f-8846-126e055bb1b7")
+  )
   (symbol
     (lib_id "PSU_LED:Conn_01x02")
     (at 72.39 101.6 0)
@@ -854,6 +946,78 @@
       (project "pcb-psu-led"
         (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
           (reference "D1")
+          (unit 1)
+        )
+      )
+    )
+  )
+  (symbol
+    (lib_id "PSU_LED:C_Polarized")
+    (at 134.62 101.6 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced no)
+    (uuid "fa25dfcc-6294-4633-b273-bb390ffe4361")
+    (property "Reference" "C1"
+      (at 137.16 102.87 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Value" "47uF 25V Panasonic FR"
+      (at 138.43 100.33 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Footprint" ""
+      (at 134.62 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Datasheet" ""
+      (at 134.62 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Description" "Panasonic FR reservoir capacitor, 47 uF, 25 V, 105 C"
+      (at 134.62 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Manufacturer" "Panasonic"
+      (at 134.62 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "MPN" "EEU-FR1E470"
+      (at 134.62 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (pin "1"
+      (uuid "29ea83e9-e2d7-42a5-b275-64c8aef05f0f")
+    )
+    (pin "2"
+      (uuid "08fc555b-6c73-4540-a549-c2ef70f745b2")
+    )
+    (instances
+      (project "pcb-psu-led"
+        (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
+          (reference "C1")
           (unit 1)
         )
       )
