@@ -32,6 +32,19 @@ jobs:
             --black-and-white \
             --output /tmp \
             pcb-psu-led.kicad_sym
+
+      - name: Validate project footprint library
+        if: ${{ hashFiles('PSU_LED.pretty/Talema_70000K.kicad_mod') != '' }}
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/workspace:ro" \
+            -w /workspace \
+            ghcr.io/kicad/kicad:10.0.4 \
+            kicad-cli fp export svg \
+            --footprint Talema_70000K \
+            --black-and-white \
+            --output /tmp \
+            PSU_LED.pretty
             
       - name: Check schematic syntax
         run: |
