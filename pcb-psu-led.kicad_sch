@@ -6,9 +6,9 @@
   (paper "A4")
   (title_block
     (title "PCB PSU LED")
-    (rev "ECAD-03")
+    (rev "ECAD-04")
     (company "Custom Step-Down PSU 230 V to 100 V")
-    (comment 1 "J1 migrated to local project symbol library")
+    (comment 1 "J1 pin order aligned: pin 1 L_SW, pin 2 N_SW")
   )
   (lib_symbols
     (symbol "PSU_LED:Conn_01x02"
@@ -493,6 +493,7 @@
   (symbol
     (lib_id "PSU_LED:Conn_01x02")
     (at 72.39 101.6 0)
+    (mirror x)
     (unit 1)
     (exclude_from_sim no)
     (in_bom yes)
