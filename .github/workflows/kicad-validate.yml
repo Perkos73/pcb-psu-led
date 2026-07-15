@@ -275,6 +275,283 @@ jobs:
 
           exit "$status"
 
+      - name: Parse-normalization probe
+        if: always()
+        shell: bash
+        run: |
+          set +e
+
+          probe_root="$RUNNER_TEMP/ci/out/normalization-probe"
+          rm -rf "$probe_root"
+          mkdir -p \
+            "$probe_root/original" \
+            "$probe_root/normalized"
+
+          if [ ! -s "$RUNNER_TEMP/ci/src/$SYM" ] || \
+             [ ! -s "$RUNNER_TEMP/ci/src/$SCH" ]; then
+            {
+              echo "## Parse-normalization probe"
+              echo
+              echo "Probe skipped: staged schematic or symbol library is missing."
+            } > "$probe_root/probe-summary.md"
+            exit 0
+          fi
+
+          cp "$RUNNER_TEMP/ci/src/$SYM" \
+            "$probe_root/original/$SYM"
+          cp "$RUNNER_TEMP/ci/src/$SCH" \
+            "$probe_root/original/$SCH"
+          cp -a "$RUNNER_TEMP/ci/src/." \
+            "$probe_root/normalized/"
+          rm -rf "$probe_root/normalized/.git"
+
+          docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            -e HOME=/home/kicad \
+            -e KICAD_CONFIG_HOME=/home/kicad/.config/kicad \
+            -e XDG_CONFIG_HOME=/home/kicad/.config \
+            -e XDG_CACHE_HOME=/home/kicad/.cache \
+            -e SCH \
+            -e SYM \
+            -v "$RUNNER_TEMP/ci/home:/home/kicad" \
+            -v "$probe_root:/probe" \
+            -w /probe/normalized \
+            "$KICAD_IMAGE" \
+            bash -lc '
+              set +e
+
+              {
+                echo "=== Baseline ERC before forced rewrite ==="
+                kicad-cli sch erc \
+                  --format report \
+                  --units mm \
+                  --severity-all \
+                  --output /probe/erc-before-normalization.rpt \
+                  "$SCH"
+                erc_before_rc=$?
+                echo "erc_before_rc=$erc_before_rc"
+
+                echo
+                echo "=== Symbol library forced rewrite ==="
+                kicad-cli sym upgrade \
+                  --force \
+                  "$SYM"
+                sym_upgrade_rc=$?
+                echo "sym_upgrade_rc=$sym_upgrade_rc"
+
+                echo
+                echo "=== Schematic forced rewrite ==="
+                kicad-cli sch upgrade \
+                  --force \
+                  "$SCH"
+                sch_upgrade_rc=$?
+                echo "sch_upgrade_rc=$sch_upgrade_rc"
+
+                echo
+                echo "=== ERC after forced rewrite ==="
+                if [ "$sym_upgrade_rc" -eq 0 ] && \
+                   [ "$sch_upgrade_rc" -eq 0 ]; then
+                  kicad-cli sch erc \
+                    --format report \
+                    --units mm \
+                    --severity-all \
+                    --output /probe/erc-after-normalization.rpt \
+                    "$SCH"
+                  erc_after_rc=$?
+                else
+                  erc_after_rc=99
+                  echo "Post-rewrite ERC skipped because an upgrade command failed."
+                fi
+                echo "erc_after_rc=$erc_after_rc"
+
+                {
+                  echo "erc_before_rc=$erc_before_rc"
+                  echo "sym_upgrade_rc=$sym_upgrade_rc"
+                  echo "sch_upgrade_rc=$sch_upgrade_rc"
+                  echo "erc_after_rc=$erc_after_rc"
+                } > /probe/probe-status.env
+              } > /probe/probe.log 2>&1
+
+              exit 0
+            '
+          container_rc=$?
+
+          diff -u \
+            "$probe_root/original/$SYM" \
+            "$probe_root/normalized/$SYM" \
+            > "$probe_root/sym-normalization.diff"
+          sym_diff_rc=$?
+
+          diff -u \
+            "$probe_root/original/$SCH" \
+            "$probe_root/normalized/$SCH" \
+            > "$probe_root/sch-normalization.diff"
+          sch_diff_rc=$?
+
+          extract_context() {
+            file="$1"
+            pattern="$2"
+            output="$3"
+
+            line="$(
+              grep -n -m1 -F "$pattern" "$file" \
+                | cut -d: -f1
+            )"
+
+            if [ -z "$line" ]; then
+              echo "Pattern not found: $pattern" > "$output"
+              return
+            fi
+
+            if [ "$line" -gt 3 ]; then
+              start=$((line - 3))
+            else
+              start=1
+            fi
+
+            end=$((line + 110))
+            sed -n "${start},${end}p" "$file" > "$output"
+          }
+
+          extract_context \
+            "$probe_root/original/$SYM" \
+            '(symbol "Conn_01x02"' \
+            "$probe_root/sym-j1-before.txt"
+
+          extract_context \
+            "$probe_root/normalized/$SYM" \
+            '(symbol "Conn_01x02"' \
+            "$probe_root/sym-j1-after.txt"
+
+          extract_context \
+            "$probe_root/original/$SCH" \
+            '(symbol "PSU_LED:Conn_01x02"' \
+            "$probe_root/sch-j1-before.txt"
+
+          extract_context \
+            "$probe_root/normalized/$SCH" \
+            '(symbol "PSU_LED:Conn_01x02"' \
+            "$probe_root/sch-j1-after.txt"
+
+          diff -u \
+            "$probe_root/sym-j1-before.txt" \
+            "$probe_root/sym-j1-after.txt" \
+            > "$probe_root/sym-j1-normalization.diff"
+          sym_j1_diff_rc=$?
+
+          diff -u \
+            "$probe_root/sch-j1-before.txt" \
+            "$probe_root/sch-j1-after.txt" \
+            > "$probe_root/sch-j1-normalization.diff"
+          sch_j1_diff_rc=$?
+
+          {
+            echo "container_rc=$container_rc"
+            echo "sym_diff_rc=$sym_diff_rc"
+            echo "sch_diff_rc=$sch_diff_rc"
+            echo "sym_j1_diff_rc=$sym_j1_diff_rc"
+            echo "sch_j1_diff_rc=$sch_j1_diff_rc"
+          } > "$probe_root/probe-host-status.env"
+
+          status_text() {
+            case "$1" in
+              0) echo "no textual change" ;;
+              1) echo "rewritten" ;;
+              *) echo "comparison error (rc=$1)" ;;
+            esac
+          }
+
+          erc_before_rc="not available"
+          sym_upgrade_rc="not available"
+          sch_upgrade_rc="not available"
+          erc_after_rc="not available"
+
+          if [ -s "$probe_root/probe-status.env" ]; then
+            # shellcheck disable=SC1090
+            . "$probe_root/probe-status.env"
+          fi
+
+          {
+            echo "## Parse-normalization probe"
+            echo
+            echo "Diagnostic only. Repository source files were not modified."
+            echo
+            echo "| Measurement | Result |"
+            echo "|---|---|"
+            echo "| Probe container | \`rc=$container_rc\` |"
+            echo "| Baseline ERC command | \`rc=$erc_before_rc\` |"
+            echo "| \`sym upgrade --force\` | \`rc=$sym_upgrade_rc\` |"
+            echo "| \`sch upgrade --force\` | \`rc=$sch_upgrade_rc\` |"
+            echo "| Post-rewrite ERC command | \`rc=$erc_after_rc\` |"
+            echo "| Whole symbol library | $(status_text "$sym_diff_rc") |"
+            echo "| Whole schematic | $(status_text "$sch_diff_rc") |"
+            echo "| J1 library block | $(status_text "$sym_j1_diff_rc") |"
+            echo "| J1 embedded block | $(status_text "$sch_j1_diff_rc") |"
+
+            echo
+            echo "### ERC before forced rewrite"
+            echo
+            echo '```text'
+            if [ -s "$probe_root/erc-before-normalization.rpt" ]; then
+              cat "$probe_root/erc-before-normalization.rpt"
+            else
+              echo "Baseline ERC report was not generated."
+            fi
+            echo '```'
+
+            echo
+            echo "### ERC after forced rewrite"
+            echo
+            echo '```text'
+            if [ -s "$probe_root/erc-after-normalization.rpt" ]; then
+              cat "$probe_root/erc-after-normalization.rpt"
+            else
+              echo "Post-rewrite ERC report was not generated."
+            fi
+            echo '```'
+
+            echo
+            echo "<details>"
+            echo "<summary>J1 library block rewrite diff</summary>"
+            echo
+            echo '```diff'
+            if [ -s "$probe_root/sym-j1-normalization.diff" ]; then
+              cat "$probe_root/sym-j1-normalization.diff"
+            else
+              echo "No textual change in the extracted J1 library block."
+            fi
+            echo '```'
+            echo "</details>"
+
+            echo
+            echo "<details>"
+            echo "<summary>J1 embedded block rewrite diff</summary>"
+            echo
+            echo '```diff'
+            if [ -s "$probe_root/sch-j1-normalization.diff" ]; then
+              cat "$probe_root/sch-j1-normalization.diff"
+            else
+              echo "No textual change in the extracted J1 embedded block."
+            fi
+            echo '```'
+            echo "</details>"
+
+            echo
+            echo "<details>"
+            echo "<summary>Probe command log</summary>"
+            echo
+            echo '```text'
+            if [ -s "$probe_root/probe.log" ]; then
+              cat "$probe_root/probe.log"
+            else
+              echo "Probe log was not generated."
+            fi
+            echo '```'
+            echo "</details>"
+          } > "$probe_root/probe-summary.md"
+
+          exit 0
+
       - name: Publish validation summary
         if: always()
         shell: bash
@@ -317,6 +594,11 @@ jobs:
             fi
             echo '```'
             echo "</details>"
+
+            if [ -s "$RUNNER_TEMP/ci/out/normalization-probe/probe-summary.md" ]; then
+              echo
+              cat "$RUNNER_TEMP/ci/out/normalization-probe/probe-summary.md"
+            fi
 
             echo
             echo "<details>"
