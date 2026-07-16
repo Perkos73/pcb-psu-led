@@ -50,7 +50,8 @@ jobs:
             "$RUNNER_TEMP/ci/home/.cache/fontconfig" \
             "$RUNNER_TEMP/ci/out/symbol" \
             "$RUNNER_TEMP/ci/out/footprint" \
-            "$RUNNER_TEMP/ci/out/board"
+            "$RUNNER_TEMP/ci/out/board/front" \
+            "$RUNNER_TEMP/ci/out/board/back"
 
           cp -a "$GITHUB_WORKSPACE/." "$RUNNER_TEMP/ci/src/"
           rm -rf "$RUNNER_TEMP/ci/src/.git"
@@ -198,6 +199,74 @@ jobs:
               echo "--- PCB placement statistics ---"
               cat /out/pcb-stats.rpt
 
+              if ! kicad-cli pcb drc \
+                --format report \
+                --units mm \
+                --severity-all \
+                --schematic-parity \
+                --output /out/drc-full.rpt \
+                "$PCB"
+              then
+                echo "Full PCB DRC report command failed."
+                exit 98
+              fi
+
+              if [ ! -s /out/drc-full.rpt ]; then
+                echo "Full PCB DRC report was not generated."
+                exit 98
+              fi
+
+              echo "--- PCB DRC baseline: all severities, non-gating before routing ---"
+              cat /out/drc-full.rpt
+
+              kicad-cli pcb export svg \
+                --output /out/board/front \
+                --layers F.Cu,F.Mask,F.Silkscreen,F.Fab \
+                --common-layers Edge.Cuts \
+                --black-and-white \
+                --fit-page-to-board \
+                --exclude-drawing-sheet \
+                --mode-single \
+                "$PCB" || exit 99
+
+              if [ "$(
+                find /out/board/front \
+                  -type f \
+                  -name "*.svg" \
+                  -size +0c | wc -l
+              )" -lt 1 ]; then
+                echo "Front board preview produced no non-empty SVG."
+                exit 99
+              fi
+
+              kicad-cli pcb export svg \
+                --output /out/board/back \
+                --layers B.Cu,B.Mask,B.Silkscreen,B.Fab \
+                --common-layers Edge.Cuts \
+                --black-and-white \
+                --mirror \
+                --fit-page-to-board \
+                --exclude-drawing-sheet \
+                --mode-single \
+                "$PCB" || exit 99
+
+              if [ "$(
+                find /out/board/back \
+                  -type f \
+                  -name "*.svg" \
+                  -size +0c | wc -l
+              )" -lt 1 ]; then
+                echo "Back board preview produced no non-empty SVG."
+                exit 99
+              fi
+
+              echo "--- Board preview files ---"
+              find /out/board \
+                -type f \
+                -name "*.svg" \
+                -printf "%s bytes  %p\n" \
+                | sort
+
               if ! kicad-cli sch erc \
                 --format report \
                 --units mm \
@@ -257,7 +326,7 @@ jobs:
 
           case "$status" in
             0)
-              echo "PASS: symbol, footprint, schematic, PCB parser and error-level ERC."
+              echo "PASS: symbol, footprint, schematic, PCB parser, DRC baseline, board previews and error-level ERC."
               ;;
             5)
               echo "::error::ERC errors found (exit 5) :: $tail_msg"
@@ -285,6 +354,12 @@ jobs:
               ;;
             97)
               echo "::error::PCB parser/statistics export failed (exit 97) :: $tail_msg"
+              ;;
+            98)
+              echo "::error::PCB DRC report generation failed (exit 98) :: $tail_msg"
+              ;;
+            99)
+              echo "::error::PCB preview SVG export failed (exit 99) :: $tail_msg"
               ;;
             125)
               echo "::error::Docker could not start the container (exit 125) :: $tail_msg"
@@ -323,6 +398,39 @@ jobs:
               cat "$RUNNER_TEMP/ci/out/pcb-stats.rpt"
             else
               echo "PCB statistics report was not generated."
+            fi
+            echo '```'
+
+            echo
+            echo "## PCB DRC baseline — all severities"
+            echo
+            echo "**Informational, non-gating before routing.**"
+            echo
+            echo '```text'
+            if [ -s "$RUNNER_TEMP/ci/out/drc-full.rpt" ]; then
+              cat "$RUNNER_TEMP/ci/out/drc-full.rpt"
+            else
+              echo "PCB DRC report was not generated."
+            fi
+            echo '```'
+
+            echo
+            echo "## Board preview files"
+            echo
+            echo '```text'
+            if find "$RUNNER_TEMP/ci/out/board" \
+              -type f \
+              -name "*.svg" \
+              -size +0c \
+              -print -quit 2>/dev/null | grep -q .
+            then
+              find "$RUNNER_TEMP/ci/out/board" \
+                -type f \
+                -name "*.svg" \
+                -printf "%s bytes  %P\n" \
+                | sort
+            else
+              echo "Board preview SVG files were not generated."
             fi
             echo '```'
 
