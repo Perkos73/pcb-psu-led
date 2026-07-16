@@ -410,7 +410,81 @@
     )
     (embedded_fonts no)
   )
-    (symbol "PSU_LED:C_Polarized"
+    (symbol "PSU_LED:C"
+    (pin_names (offset 1.016) (hide yes))
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (in_pos_files yes)
+    (duplicate_pin_numbers_are_jumpers no)
+    (property "Reference" "C"
+      (at 2.54 1.27 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "C"
+      (at 3.81 -1.27 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Datasheet" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Description" "Unpolarized capacitor"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "ki_keywords" "capacitor unpolarized ceramic"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (symbol "C_0_1"
+      (polyline
+        (pts (xy -1.27 0.508) (xy 1.27 0.508))
+        (stroke (width 0.254) (type default))
+        (fill (type none))
+      )
+      (polyline
+        (pts (xy -1.27 -0.508) (xy 1.27 -0.508))
+        (stroke (width 0.254) (type default))
+        (fill (type none))
+      )
+    )
+    (symbol "C_1_1"
+      (pin passive line
+        (at 0 5.08 270)
+        (length 4.572)
+        (name "1" (effects (font (size 1.27 1.27))))
+        (number "1" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at 0 -5.08 90)
+        (length 4.572)
+        (name "2" (effects (font (size 1.27 1.27))))
+        (number "2" (effects (font (size 1.27 1.27))))
+      )
+    )
+  )
+  (symbol "PSU_LED:C_Polarized"
       (pin_names (offset 1.016))
       (exclude_from_sim no)
       (in_bom yes)
@@ -827,6 +901,34 @@
     )
     (uuid "50270d7b-7e1f-4456-90f8-927a233a3670")
   )
+  (label "VRAW_PLUS"
+    (at 146.05 96.52 90)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "abaddae7-9011-4be8-864f-1fb22c7dafd5")
+  )
+  (label "CT_RAW"
+    (at 146.05 106.68 270)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "f11f285e-4807-46b9-beca-a3a0199df6dc")
+  )
+  (label "PLUS_5V_LED"
+    (at 173.99 96.52 90)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "bceeeeed-fde4-493e-a8fd-44520a43ca39")
+  )
+  (label "CT_RAW"
+    (at 173.99 106.68 270)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "4edddcaa-099c-40da-93ba-def339ba41cd")
+  )
   (label "L_FUSED"
     (at 93.98 90.17 90)
     (effects
@@ -1007,6 +1109,150 @@
       (project "pcb-psu-led"
         (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
           (reference "F1")
+          (unit 1)
+        )
+      )
+    )
+  )
+  (symbol
+    (lib_id "PSU_LED:C")
+    (at 146.05 101.6 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced no)
+    (uuid "1646c14d-b1ba-4edd-b1dd-a57ea75406dd")
+    (property "Reference" "C2"
+      (at 148.59 102.86999999999999 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Value" "100nF X7R"
+      (at 149.86 100.33 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Footprint" ""
+      (at 146.05 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Datasheet" ""
+      (at 146.05 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Description" "Input bypass for U1, 100 nF X7R, Rev. 6.4.1 item E-08"
+      (at 146.05 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Manufacturer" ""
+      (at 146.05 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "MPN" "TBD"
+      (at 146.05 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (pin "1"
+      (uuid "64f6fd32-06e5-4eda-b71a-59fee439a1c5")
+    )
+    (pin "2"
+      (uuid "238df292-472b-401b-ba91-40084ad83f61")
+    )
+    (instances
+      (project "pcb-psu-led"
+        (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
+          (reference "C2")
+          (unit 1)
+        )
+      )
+    )
+  )
+  (symbol
+    (lib_id "PSU_LED:C")
+    (at 173.99 101.6 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced no)
+    (uuid "3d8ee3a9-0486-4992-aa4a-4662f7fc2ba9")
+    (property "Reference" "C3"
+      (at 176.53 102.86999999999999 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Value" "100nF X7R"
+      (at 177.8 100.33 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Footprint" ""
+      (at 173.99 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Datasheet" ""
+      (at 173.99 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Description" "Output bypass for U1, 100 nF X7R, Rev. 6.4.1 item E-08"
+      (at 173.99 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Manufacturer" ""
+      (at 173.99 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "MPN" "TBD"
+      (at 173.99 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (pin "1"
+      (uuid "2e39e5c6-3ad0-4bdf-81f9-b9529847cf28")
+    )
+    (pin "2"
+      (uuid "2c4ca92c-77c8-4391-9ad8-eba29793100d")
+    )
+    (instances
+      (project "pcb-psu-led"
+        (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
+          (reference "C3")
           (unit 1)
         )
       )

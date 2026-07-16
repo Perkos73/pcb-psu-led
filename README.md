@@ -4,15 +4,17 @@ Moduł zasilania i sterowania diody LED dla customowego zasilacza step-down 230 
 
 ## Status projektu
 
-- Aktualna rewizja elektryczna: **ECAD-11**
+- Aktualna rewizja elektryczna: **ECAD-15**
+- Ostatnia rewizja dokumentacji: **DOC-05**
+- Schemat: **9 z 11 pozycji** (brakuje `R1`, `RV1`, `J2` — ECAD-16)
 - ERC bramkujący: **0 errors / 0 warnings**
-- Pełny ERC: **0 errors / 1 warning**
-- Otwarte ostrzeżenie: `isolated_pin_label` dla sieci `PLUS_5V_LED`
+- Pełny ERC: **0 errors / 0 warnings**
 - Walidacja: wyłącznie przez **GitHub Actions**
-- Wersja KiCad w CI: **10.0.4**
+- Wersja KiCad w CI: **10.0.4** (obraz `ghcr.io/kicad/kicad:10.0-full`, wersja raportowana w runtime)
 - Gałąź robocza: `main`
+- Gałąź `pcb2`: równoległy projekt drugiego zespołu, wspólny przodek ECAD-11 — **nie mergować**
 
-Ostrzeżenie `PLUS_5V_LED` jest oczekiwane na obecnym etapie: wyjście U1 jest już utworzone, ale kolejny element tej sieci nie został jeszcze dodany.
+Ostrzeżenie `isolated_pin_label` dla `PLUS_5V_LED` zostało zamknięte w ECAD-15 przez dodanie `C3`.
 
 ## Zatwierdzona topologia
 
@@ -81,6 +83,8 @@ Pinout projektu:
 - `fp-lib-table` — mapowanie lokalnej biblioteki footprintów
 - `.github/workflows/kicad-validate.yml` — workflow walidacyjny
 - `README.md` — dokumentacja zatwierdzonego stanu projektu
+- `docs/platform.md` — fakty źródłowe: karta 700xxK, ograniczenia `Rev. 6.4.1`,
+  macierz wariantów, reguły platformowe
 
 ## Walidacja CI
 
@@ -152,6 +156,17 @@ Warning:              PLUS_5V_LED connected to only one pin
 - ERC bramkujący: `0 errors`
 - pełny ERC: jedno oczekiwane ostrzeżenie dla tymczasowo jednoelementowej sieci `PLUS_5V_LED`
 
+### ECAD-15
+
+- dodano kondensatory odsprzęgające stabilizatora: `C2`, `C3 = 100 nF X7R`
+- nowy lokalny symbol `C` (niespolaryzowany) w `pcb-psu-led.kicad_sym`
+  i w `lib_symbols` schematu
+- `C2`: `VRAW_PLUS ↔ CT_RAW`, wejście `U1.3`
+- `C3`: `PLUS_5V_LED ↔ CT_RAW`, wyjście `U1.1`
+- podstawa: `Rev. 6.4.1` poz. `E-08` (2 szt. 100 nF X7R)
+- `C3` domknął sieć `PLUS_5V_LED` drugim pinem → ostrzeżenie `isolated_pin_label` znika
+- schemat: 9 z 11 pozycji
+
 ### ECAD-14
 
 - dodano bezpiecznik pierwotny `F1 = T32 mA / 250 V` zwłoczny
@@ -181,20 +196,23 @@ Warning:              PLUS_5V_LED connected to only one pin
 
 ## Następny etap
 
-**ECAD-15 — kondensatory odsprzęgające U1**
+**ECAD-16 — gałąź diody LED**
 
-- `C2`, `C3 = 100 nF X7R` — bypass wejścia i wyjścia stabilizatora
-- `C2`: `VRAW_PLUS ↔ CT_RAW`, blisko `U1.3`
-- `C3`: `PLUS_5V_LED ↔ CT_RAW`, blisko `U1.1`
-- podstawa: `Rev. 6.4.1` poz. `E-08` (2 szt. 100 nF X7R)
-- `C3` domyka sieć `PLUS_5V_LED` → znika ostrzeżenie `isolated_pin_label`
+- `R1 = 680 Ω / 0.6 W` (Vishay PR02) — rezystor stały, **FROZEN**, zakaz 560 Ω
+- `RV1 = Bourns 3296W 10 kΩ` cermet wieloobrotowy — regulacja jasności, w szeregu
+- `J2 = JST XH 2-pin` — wyjście na diodę Kingbright L-7104EC na panelu przednim
+- tor: `PLUS_5V_LED → R1 → RV1 → J2.1`; `J2.2 → CT_RAW`
+- podstawa: `Rev. 6.4.1` §3.4 oraz poz. `E-04`, `E-09`, `E-10`
+- zakres prądu: `(5 − 1.9) / 680 ≈ 4.6 mA` maks., z `RV1` do `~0.3 mA`
+  → wymóg `I_f < 1 mA` osiągalny pokrętłem
+- wymaga dwóch nowych symboli: `R` oraz `R_Potentiometer`
+- po tym commicie schemat jest kompletny: **11 pozycji, ERC 0/0**
 
 Kolejka:
 
 ```text
-ECAD-15   C2, C3 = 100 nF X7R — bypass wejścia i wyjścia U1
-ECAD-16   R1 = 680 Ω / 0.6 W, RV1 = Bourns 3296W 10 kΩ, J2 = JST XH 2-pin
-────────  schemat kompletny: 11 pozycji, ERC 0/0
+ECAD-16   R1, RV1, J2 — gałąź LED
+────────  schemat kompletny
 etap 2    footprinty — kopie stockowe z obrazu 10.0-full + lokalna Talema
 etap 3    PCB — netclasy MAINS/SELV, mains.kicad_dru, obrys, placement, DRC w CI
 etap 4    dokumentacja produkcyjna
