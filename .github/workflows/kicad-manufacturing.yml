@@ -1,0 +1,314 @@
+name: KiCad Manufacturing
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: kicad-manufacturing-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  KICAD_IMAGE: ghcr.io/kicad/kicad:10.0-full
+  KICAD_EXPECTED: "10.0."
+  PCB: pcb-psu-led.kicad_pcb
+  SCH: pcb-psu-led.kicad_sch
+  PRO: pcb-psu-led.kicad_pro
+  DRU: pcb-psu-led.kicad_dru
+  REVISION: PCB2-PCB-04R1
+
+jobs:
+  manufacture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout pcb2
+        uses: actions/checkout@v6
+        with:
+          ref: pcb2
+
+      - name: Verify source state
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for file in "$PCB" "$SCH" "$PRO" "$DRU" fp-lib-table sym-lib-table; do
+            if [ ! -s "$file" ]; then
+              echo "::error::Missing or empty required file: $file"
+              exit 90
+            fi
+          done
+
+          actual_revision="$(
+            sed -n 's/^[[:space:]]*(rev "\(.*\)")/\1/p' "$PCB" | head -n 1
+          )"
+
+          echo "Expected PCB revision: $REVISION"
+          echo "Detected PCB revision: $actual_revision"
+
+          if [ "$actual_revision" != "$REVISION" ]; then
+            echo "::error::PCB revision mismatch. Expected $REVISION, detected $actual_revision"
+            exit 96
+          fi
+
+      - name: Resolve and verify KiCad image
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          docker pull "$KICAD_IMAGE"
+
+          version="$(
+            docker run --rm "$KICAD_IMAGE" kicad-cli version 2>&1 | tr -d '\r'
+          )"
+
+          echo "kicad-cli version: $version"
+          printf '%s\n' "$version" > kicad-manufacturing-version.txt
+
+          case "$version" in
+            "$KICAD_EXPECTED"*)
+              ;;
+            *)
+              echo "::error::Expected KiCad ${KICAD_EXPECTED}x, image reports: $version"
+              exit 96
+              ;;
+          esac
+
+      - name: Generate fabrication outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          output_dir="production/$REVISION"
+          rm -rf "$output_dir"
+          mkdir -p \
+            "$output_dir/gerbers" \
+            "$output_dir/drill" \
+            "$output_dir/netlist" \
+            "$output_dir/reports"
+
+          docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            -e HOME=/tmp \
+            -e PCB \
+            -e SCH \
+            -e REVISION \
+            -v "$GITHUB_WORKSPACE:/work" \
+            -w /work \
+            "$KICAD_IMAGE" \
+            bash -lc '
+              set -euo pipefail
+
+              OUT="production/$REVISION"
+
+              echo "--- Error-level PCB DRC gate ---"
+              kicad-cli pcb drc \
+                --format report \
+                --units mm \
+                --severity-error \
+                --schematic-parity \
+                --exit-code-violations \
+                --output "$OUT/reports/drc-errors.rpt" \
+                "$PCB"
+              cat "$OUT/reports/drc-errors.rpt"
+
+              echo "--- Error-level ERC gate ---"
+              kicad-cli sch erc \
+                --format report \
+                --units mm \
+                --severity-error \
+                --exit-code-violations \
+                --output "$OUT/reports/erc-errors.rpt" \
+                "$SCH"
+              cat "$OUT/reports/erc-errors.rpt"
+
+              echo "--- PCB statistics ---"
+              kicad-cli pcb export stats \
+                --format report \
+                --units mm \
+                --subtract-holes-from-board \
+                --subtract-holes-from-copper \
+                --output "$OUT/reports/pcb-stats.rpt" \
+                "$PCB"
+              cat "$OUT/reports/pcb-stats.rpt"
+
+              echo "--- Gerber export ---"
+              kicad-cli pcb export gerbers \
+                --output "$OUT/gerbers" \
+                --layers F.Cu,B.Cu,F.Mask,B.Mask,F.Silkscreen,B.Silkscreen,Edge.Cuts \
+                --subtract-soldermask \
+                --precision 6 \
+                --no-protel-ext \
+                --check-zones \
+                "$PCB"
+
+              echo "--- Excellon drill export ---"
+              kicad-cli pcb export drill \
+                --output "$OUT/drill" \
+                --format excellon \
+                --drill-origin absolute \
+                --excellon-zeros-format decimal \
+                --excellon-oval-format route \
+                --excellon-units mm \
+                --excellon-separate-th \
+                --generate-map \
+                --map-format svg \
+                --generate-report \
+                --report-path "$OUT/reports/drill-report.rpt" \
+                "$PCB"
+
+              echo "--- IPC-D-356 electrical test netlist ---"
+              kicad-cli pcb export ipcd356 \
+                --output "$OUT/netlist/pcb-psu-led.d356" \
+                "$PCB"
+            '
+
+      - name: Verify fabrication set
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          output_dir="production/$REVISION"
+          gerber_dir="$output_dir/gerbers"
+          drill_dir="$output_dir/drill"
+
+          required_layers=(
+            F_Cu
+            B_Cu
+            F_Mask
+            B_Mask
+            F_Silkscreen
+            B_Silkscreen
+            Edge_Cuts
+          )
+
+          for layer in "${required_layers[@]}"; do
+            if ! find "$gerber_dir" -maxdepth 1 -type f \
+              -name "*${layer}*.gbr" -size +0c -print -quit | grep -q .
+            then
+              echo "::error::Missing or empty Gerber layer: $layer"
+              exit 101
+            fi
+          done
+
+          gerber_count="$(
+            find "$gerber_dir" -maxdepth 1 -type f -name '*.gbr' -size +0c | wc -l
+          )"
+          if [ "$gerber_count" -ne 7 ]; then
+            echo "::error::Expected exactly 7 Gerber files, found $gerber_count"
+            exit 101
+          fi
+
+          drill_count="$(
+            find "$drill_dir" -maxdepth 1 -type f -name '*.drl' -size +0c | wc -l
+          )"
+          if [ "$drill_count" -lt 2 ]; then
+            echo "::error::Expected separate plated and NPTH drill files; found $drill_count"
+            exit 102
+          fi
+
+          for report in \
+            "$output_dir/reports/drc-errors.rpt" \
+            "$output_dir/reports/erc-errors.rpt" \
+            "$output_dir/reports/pcb-stats.rpt" \
+            "$output_dir/reports/drill-report.rpt" \
+            "$output_dir/netlist/pcb-psu-led.d356"
+          do
+            if [ ! -s "$report" ]; then
+              echo "::error::Missing or empty manufacturing output: $report"
+              exit 103
+            fi
+          done
+
+          {
+            echo "PCB PSU LED FABRICATION MANIFEST"
+            echo "Revision: $REVISION"
+            echo "KiCad: $(cat kicad-manufacturing-version.txt)"
+            echo "Commit: $GITHUB_SHA"
+            echo "Generated UTC: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo
+            echo "FILES"
+            find "$output_dir" -type f ! -name MANIFEST.txt \
+              -printf '%10s  %P\n' | sort
+            echo
+            echo "SHA256"
+            (
+              cd "$output_dir"
+              find . -type f ! -name MANIFEST.txt -print0 \
+                | sort -z \
+                | xargs -0 sha256sum
+            )
+          } > "$output_dir/MANIFEST.txt"
+
+          echo "--- Fabrication manifest ---"
+          cat "$output_dir/MANIFEST.txt"
+          echo
+          echo "--- Drill report ---"
+          cat "$output_dir/reports/drill-report.rpt"
+
+      - name: Publish manufacturing summary
+        shell: bash
+        run: |
+          output_dir="production/$REVISION"
+
+          {
+            echo "# KiCad manufacturing — $REVISION"
+            echo
+            echo "**Source commit:** \`$GITHUB_SHA\`"
+            echo
+            echo "**KiCad:** \`$(cat kicad-manufacturing-version.txt)\`"
+            echo
+            echo "## Fabrication manifest"
+            echo
+            echo '```text'
+            cat "$output_dir/MANIFEST.txt"
+            echo '```'
+            echo
+            echo "## Drill report"
+            echo
+            echo '```text'
+            cat "$output_dir/reports/drill-report.rpt"
+            echo '```'
+            echo
+            echo "## Error-level PCB DRC"
+            echo
+            echo '```text'
+            cat "$output_dir/reports/drc-errors.rpt"
+            echo '```'
+            echo
+            echo "## Error-level ERC"
+            echo
+            echo '```text'
+            cat "$output_dir/reports/erc-errors.rpt"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit fabrication files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add "production/$REVISION"
+
+          if git diff --cached --quiet; then
+            echo "Fabrication outputs are unchanged; no commit required."
+            exit 0
+          fi
+
+          git commit -m "PCB2-MFG-01: publish $REVISION fabrication outputs [skip ci]"
+          git push origin HEAD:pcb2
+
+      - name: Upload manufacturing reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: pcb-psu-led-${{ env.REVISION }}-manufacturing
+          path: production/${{ env.REVISION }}
+          if-no-files-found: error
+          retention-days: 30
