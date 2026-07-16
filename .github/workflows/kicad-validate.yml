@@ -3,7 +3,7 @@ name: KiCad Validate
 on:
   push:
     branches:
-      - main
+      - pcb2
   workflow_dispatch:
 
 concurrency:
