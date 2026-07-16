@@ -6,9 +6,9 @@
   (paper "A4")
   (title_block
   (title "PCB PSU LED")
-  (rev "ECAD-11")
+  (rev "PCB2-ECAD-01")
   (company "Custom Step-Down PSU 230 V to 100 V")
-  (comment 1 "U1 LM78L05ACZ regulator added")
+  (comment 1 "F1 T32mA primary fuse added between L_SW and T1.6")
 )
 (lib_symbols
   (symbol "PSU_LED:Conn_01x02"
@@ -695,6 +695,93 @@
       )
     )
   )
+  (symbol "PSU_LED:Fuse_5x20mm"
+    (pin_names (offset 1.016) (hide yes))
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (in_pos_files yes)
+    (duplicate_pin_numbers_are_jumpers no)
+    (property "Reference" "F"
+      (at 0 2.54 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "Fuse_5x20mm"
+      (at 0 -2.54 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Datasheet" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Description" "Time-lag fuse, 32 mA, 250 V, 5x20 mm, primary protection for T1"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Manufacturer" "TBD"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "MPN" "TBD"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "ki_keywords" "fuse time-lag slow-blow 32mA 250V 5x20 primary"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (symbol "Fuse_5x20mm_1_1"
+      (rectangle
+        (start -1.27 1.27)
+        (end 1.27 -1.27)
+        (stroke (width 0.254) (type default))
+        (fill (type none))
+      )
+      (polyline
+        (pts (xy -1.27 0) (xy 1.27 0))
+        (stroke (width 0.254) (type default))
+        (fill (type none))
+      )
+      (pin passive line
+        (at -5.08 0 0)
+        (length 3.81)
+        (name "1" (effects (font (size 1.27 1.27))))
+        (number "1" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at 5.08 0 180)
+        (length 3.81)
+        (name "2" (effects (font (size 1.27 1.27))))
+        (number "2" (effects (font (size 1.27 1.27))))
+      )
+    )
+  )
   )
   (wire
     (pts (xy 77.47 100.33) (xy 83.82 100.33))
@@ -711,14 +798,6 @@
       (type default)
     )
     (uuid "47c6f3fd-50e9-497c-ada1-1eeab5fddd04")
-  )
-  (wire
-    (pts (xy 83.82 93.98) (xy 93.98 93.98))
-    (stroke
-      (width 0)
-      (type default)
-    )
-    (uuid "d3348e49-279c-4333-9f0e-1c6546687d8b")
   )
   (wire
     (pts (xy 77.47 102.87) (xy 86.36 102.87))
@@ -925,6 +1004,78 @@
       (project "pcb-psu-led"
         (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
           (reference "J1")
+          (unit 1)
+        )
+      )
+    )
+  )
+  (symbol
+    (lib_id "PSU_LED:Fuse_5x20mm")
+    (at 88.9 93.98 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced no)
+    (uuid "84927fe3-8ee6-499c-9f55-b7a484569b8f")
+    (property "Reference" "F1"
+      (at 88.9 91.44 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Value" "T32mA 250V"
+      (at 88.9 96.52 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Footprint" ""
+      (at 88.9 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Datasheet" ""
+      (at 88.9 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Description" "Time-lag fuse, 32 mA, 250 V, 5x20 mm, primary protection for T1"
+      (at 88.9 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Manufacturer" "TBD"
+      (at 88.9 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "MPN" "TBD"
+      (at 88.9 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (pin "1"
+      (uuid "c92e555c-b9ed-43c6-b67e-063f4b4ced57")
+    )
+    (pin "2"
+      (uuid "8ee8a53c-af8c-4dc1-aa43-29e52a1149a0")
+    )
+    (instances
+      (project "pcb-psu-led"
+        (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
+          (reference "F1")
           (unit 1)
         )
       )
