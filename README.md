@@ -155,6 +155,12 @@ Warning:              PLUS_5V_LED connected to only one pin
 - ERC bramkujący: `0 errors`
 - pełny ERC: jedno oczekiwane ostrzeżenie dla tymczasowo jednoelementowej sieci `PLUS_5V_LED`
 
+### ECAD-13
+
+- `pcb-psu-led.kicad_sch:890` — instancja `J1`, pole `Datasheet` `"~"` → `""`
+- usunięto ostatni legacy placeholder w projekcie
+- ERC bez zmian: `0 errors / 1 warning`
+
 ### ECAD-12
 
 - footprint `Talema_70000K`: wiertło padów sygnalowych `Ø1.3` → `Ø1.5`
@@ -167,21 +173,19 @@ Warning:              PLUS_5V_LED connected to only one pin
 
 ## Następny etap
 
-**ECAD-13 — usunięcie ostatniego placeholdera `~`**
+**ECAD-14 — zabezpieczenie pierwotne transformatora T1**
 
-- `pcb-psu-led.kicad_sch:890` — instancja `J1`, pole `Datasheet` `"~"` → `""`
-- ten sam token, który w ECAD-09 wywoływał `lib_symbol_mismatch`
-- reguła platformowa: `Datasheet` nigdy `~`, zawsze `""` lub pełny URL
+- `F1 = T32 mA / 250 V zwłoczny`, w przewodzie fazowym pomiędzy `J1.1 / L_SW` a `T1.6`
+- podstawa: karta 700xxK, kolumna `230V Fuse mA (Max.)` = `32 mA` dla `1.6 VA`
+- zamrożony `T500 mA` w module SCI PC-5 jest `15.6×` powyżej maksimum producenta
+  i nie zareaguje na awarię tego transformatora
+- nie zmieniać przewodu neutralnego, mostka `T1.5 ↔ T1.4`, strony wtórnej ani regulatora
+- obudowa bezpiecznika (5×20 vs TR5) rozstrzygana na etapie placementu — symbol ten sam
 
 Kolejka:
 
 ```text
-ECAD-13   sch:890  "~" -> ""
-DOC-03    docs/PLATFORM.md — fakty z karty 700xxK, ograniczenia Rev. 6.4.1,
-                             macierz wariantów, reguły platformowe
-ECAD-14   F1 = T32 mA / 250 V zwłoczny, w L_SW pomiędzy J1.1 a T1.6
-          (podstawa: karta 700xxK, kolumna "230V Fuse mA" = 32 mA dla 1.6 VA;
-           zamrożony T500 mA w module SCI PC-5 jest 15.6x powyżej maksimum)
+ECAD-14   F1 = T32 mA / 250 V zwłoczny
 ECAD-15   C2, C3 = 100 nF X7R — bypass wejścia i wyjścia U1
 ECAD-16   R1 = 680 Ω / 0.6 W, RV1 = Bourns 3296W 10 kΩ, J2 = JST XH 2-pin
 ────────  schemat kompletny: 11 pozycji, ERC 0/0
@@ -189,3 +193,9 @@ etap 2    footprinty — kopie stockowe z obrazu 10.0-full + lokalna Talema
 etap 3    PCB — netclasy MAINS/SELV, mains.kicad_dru, obrys, placement, DRC w CI
 etap 4    dokumentacja produkcyjna
 ```
+
+## Dokumenty źródłowe
+
+- `docs/PLATFORM.md` — fakty z karty 700xxK, ograniczenia `Rev. 6.4.1`,
+  macierz wariantów, reguły platformowe, pozycje otwarte.
+  **Czytać przed każdą zmianą projektową.**
