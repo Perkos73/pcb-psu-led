@@ -1,0 +1,9 @@
+(version 1)
+
+# PCB2-PCB-04
+# Enforce 6 mm copper clearance between the 230 V primary domain
+# and all transformer-secondary / SELV circuitry.
+(rule "MAINS to SELV clearance 6 mm"
+  (condition "((A.NetName == '/L_SW' || A.NetName == '/N_SW' || A.NetName == '/PRI_LINK_5_4' || A.NetName == 'Net-(T1-P1_START)') && (B.NetName == '/SEC_A' || B.NetName == '/SEC_B' || B.NetName == '/CT_RAW' || B.NetName == '/VRAW_PLUS' || B.NetName == '/PLUS_5V_LED' || B.NetName == '/LED_ANODE_OUT' || B.NetName == 'Net-(RV1-CW)')) || ((B.NetName == '/L_SW' || B.NetName == '/N_SW' || B.NetName == '/PRI_LINK_5_4' || B.NetName == 'Net-(T1-P1_START)') && (A.NetName == '/SEC_A' || A.NetName == '/SEC_B' || A.NetName == '/CT_RAW' || A.NetName == '/VRAW_PLUS' || A.NetName == '/PLUS_5V_LED' || A.NetName == '/LED_ANODE_OUT' || A.NetName == 'Net-(RV1-CW)'))")
+  (constraint clearance (min 6mm))
+)
