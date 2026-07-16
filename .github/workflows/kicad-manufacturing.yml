@@ -1,6 +1,11 @@
 name: KiCad Manufacturing
 
 on:
+  push:
+    branches:
+      - pcb2
+    paths:
+      - ".github/workflows/kicad-manufacturing.yml"
   workflow_dispatch:
 
 concurrency:
