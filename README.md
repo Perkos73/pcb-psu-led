@@ -8,7 +8,8 @@ Alternatywna, niezależnie rozwijana wersja modułu zasilania i sterowania diody
 ## Status projektu
 
 - Gałąź robocza: `pcb2`
-- Aktualna rewizja PCB: **PCB2-PCB-03R3**
+- Aktualna zatwierdzona rewizja PCB: **PCB2-PCB-04**
+- Rewizja w przygotowaniu: **PCB2-PCB-04R1** — oznaczenia produkcyjne
 - Schemat: kompletny i zsynchronizowany z PCB
 - ERC: **0 errors / 0 warnings**
 - DRC bramkujący, tylko błędy: **0 violations**
@@ -175,5 +176,19 @@ Full DRC:
 - zamrożenie krytycznych footprintów w bibliotece projektowej,
 - finalna korekta sitodruku,
 - pełna zgodność elektryczna schemat–PCB,
-- osobny, blokujący DRC dla błędów,
+- osobny, blokujący DRC dla błędów.
+
+### PCB2-PCB-04
+
+- prawidłowe otwory montażowe M3 jako NPTH 3.2 mm,
+- keepout miedzi wokół otworów,
+- reguła bezpieczeństwa 6 mm między domenami MAINS i SELV,
+- DRC bramkujący: 0 violations,
 - aktualny zatwierdzony stan gałęzi `pcb2`.
+
+### PCB2-PCB-04R1
+
+- synchronizacja oznaczenia rewizji na sitodruku,
+- jednoznaczne oznaczenia `L` i `N` przy J1,
+- jednoznaczne oznaczenia `LED+` i `0V` przy J2,
+- rewizja wymaga potwierdzenia przez GitHub Actions.
