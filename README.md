@@ -155,20 +155,37 @@ Warning:              PLUS_5V_LED connected to only one pin
 - ERC bramkujący: `0 errors`
 - pełny ERC: jedno oczekiwane ostrzeżenie dla tymczasowo jednoelementowej sieci `PLUS_5V_LED`
 
+### ECAD-12
+
+- footprint `Talema_70000K`: wiertło padów sygnalowych `Ø1.3` → `Ø1.5`
+- podstawa: karta 700xxK — pin `1.0 x 0.5 mm` prostokątny, przekątna `1.118 mm`
+- `Ø1.3` dawało `0.09 mm` luzu promieniowego (minimum bezwzględne IPC); `Ø1.5` daje `0.19 mm`
+- pierścień przy padzie `Ø3.0` pozostaje `0.75 mm`
+- współrzędne padów, maska, NPTH i strefy — bez zmian
+- `descr` uzupełniony o dane z karty i regułę placementu (`rot=180`)
+- zmiana wpływa na fabrykację, nie na ERC
+
 ## Następny etap
 
-**ECAD-12 — zabezpieczenie pierwotne transformatora T1**
+**ECAD-13 — usunięcie ostatniego placeholdera `~`**
 
-Zakres:
+- `pcb-psu-led.kicad_sch:890` — instancja `J1`, pole `Datasheet` `"~"` → `""`
+- ten sam token, który w ECAD-09 wywoływał `lib_symbol_mismatch`
+- reguła platformowa: `Datasheet` nigdy `~`, zawsze `""` lub pełny URL
 
-- dodać `F1 = T32 mA / 250 V, 5×20 mm`,
-- włączyć F1 pomiędzy `J1.1 / L_SW` a `T1.6`,
-- nie zmieniać przewodu neutralnego,
-- nie zmieniać mostka `T1.5 ↔ T1.4`,
-- nie zmieniać strony wtórnej ani układu regulatora.
-
-Planowany commit elektryczny:
+Kolejka:
 
 ```text
-ECAD-12: add primary fuse F1
+ECAD-13   sch:890  "~" -> ""
+DOC-03    docs/PLATFORM.md — fakty z karty 700xxK, ograniczenia Rev. 6.4.1,
+                             macierz wariantów, reguły platformowe
+ECAD-14   F1 = T32 mA / 250 V zwłoczny, w L_SW pomiędzy J1.1 a T1.6
+          (podstawa: karta 700xxK, kolumna "230V Fuse mA" = 32 mA dla 1.6 VA;
+           zamrożony T500 mA w module SCI PC-5 jest 15.6x powyżej maksimum)
+ECAD-15   C2, C3 = 100 nF X7R — bypass wejścia i wyjścia U1
+ECAD-16   R1 = 680 Ω / 0.6 W, RV1 = Bourns 3296W 10 kΩ, J2 = JST XH 2-pin
+────────  schemat kompletny: 11 pozycji, ERC 0/0
+etap 2    footprinty — kopie stockowe z obrazu 10.0-full + lokalna Talema
+etap 3    PCB — netclasy MAINS/SELV, mains.kicad_dru, obrys, placement, DRC w CI
+etap 4    dokumentacja produkcyjna
 ```
