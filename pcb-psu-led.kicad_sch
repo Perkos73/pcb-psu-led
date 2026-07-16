@@ -6,9 +6,9 @@
   (paper "A4")
   (title_block
   (title "PCB PSU LED")
-  (rev "PCB2-ECAD-03")
+  (rev "PCB2-ECAD-03R1")
   (company "Custom Step-Down PSU 230 V to 100 V")
-  (comment 1 "R1, RV1 rheostat and J2 panel LED output added")
+  (comment 1 "RV1 wiper connected to output node")
 )
 (lib_symbols
   (symbol "PSU_LED:Conn_01x02"
@@ -1328,12 +1328,12 @@
     (uuid "95d1c3f5-e355-4ba8-9356-eacfa96547c3")
   )
   (wire
-    (pts (xy 195.58 88.9) (xy 203.2 88.9))
+    (pts (xy 195.58 99.06) (xy 203.2 99.06))
     (stroke (width 0) (type default))
     (uuid "00a445ea-5024-47de-92e6-473ef279e4c3")
   )
   (wire
-    (pts (xy 203.2 88.9) (xy 203.2 93.98))
+    (pts (xy 203.2 99.06) (xy 203.2 93.98))
     (stroke (width 0) (type default))
     (uuid "fc2a37ad-2bd2-4673-9879-3882192cf0c7")
   )
