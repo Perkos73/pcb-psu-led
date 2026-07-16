@@ -176,8 +176,8 @@ jobs:
           drill_dir="$output_dir/drill"
 
           required_layers=(
-            top_cu
-            bottom_cu
+            F_Cu
+            B_Cu
             F_Mask
             B_Mask
             F_Silkscreen
