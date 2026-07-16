@@ -1,11 +1,23 @@
 {
-  "meta": {
-    "filename": "pcb-psu-led.kicad_pro",
-    "version": 3
+  "board": {
+    "design_settings": {
+      "drc_exclusions": [
+        "lib_footprint_mismatch|127500000|22000000|97e58912-a983-4711-a0b6-09ddcee2d621|00000000-0000-0000-0000-000000000000",
+        "lib_footprint_mismatch|10000000|60000000|cd210301-8304-4210-af41-719a4949e2d4|00000000-0000-0000-0000-000000000000",
+        "lib_footprint_mismatch|75000000|40000000|e32863bb-9ea3-402a-9fcc-cbba4d0a6977|00000000-0000-0000-0000-000000000000"
+      ],
+      "meta": {
+        "version": 2
+      }
+    }
   },
   "libraries": {
     "pinned_footprint_libs": [],
     "pinned_symbol_libs": []
+  },
+  "meta": {
+    "filename": "pcb-psu-led.kicad_pro",
+    "version": 3
   },
   "schematic": {
     "legacy_lib_dir": "",
