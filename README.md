@@ -196,6 +196,6 @@ etap 4    dokumentacja produkcyjna
 
 ## Dokumenty źródłowe
 
-- `docs/PLATFORM.md` — fakty z karty 700xxK, ograniczenia `Rev. 6.4.1`,
+- `docs/platform.md` — fakty z karty 700xxK, ograniczenia `Rev. 6.4.1`,
   macierz wariantów, reguły platformowe, pozycje otwarte.
   **Czytać przed każdą zmianą projektową.**
