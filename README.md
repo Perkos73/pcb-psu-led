@@ -8,7 +8,7 @@ Alternatywna, niezależnie rozwijana wersja modułu zasilania i sterowania diody
 ## Status projektu
 
 - Gałąź robocza: `pcb2`
-- Aktualna zatwierdzona rewizja PCB: **PCB2-PCB-04R1**
+- Aktualna zatwierdzona rewizja PCB: **PCB2-PCB-04R2**
 - Schemat: kompletny i zsynchronizowany z PCB
 - ERC: **0 errors / 0 warnings**
 - DRC bramkujący: **0 violations**
@@ -40,7 +40,7 @@ Na panelu przednim włącznik NKK znajduje się po lewej, a dioda LED po prawej.
 | Warstwy miedzi | 2 |
 | Materiał | FR-4 |
 | Grubość laminatu | 1.6 mm |
-| Miedź | 70 µm / 2 oz |
+| Miedź | 35 µm / 1 oz |
 | Technologia | THT |
 | Liczba komponentów | 12 |
 | Liczba przelotek | 0 |
@@ -76,7 +76,7 @@ Na panelu przednim włącznik NKK znajduje się po lewej, a dioda LED po prawej.
 
 ## Bezpieczeństwo i DFM
 
-Rewizja `PCB2-PCB-04R1` zawiera:
+Rewizja `PCB2-PCB-04R2` zawiera:
 
 - regułę odstępu 6 mm między domenami MAINS i SELV,
 - otwory montażowe M3 jako NPTH,
@@ -144,10 +144,10 @@ Full DRC:
 Komplet produkcyjny znajduje się w:
 
 ```text
-production/PCB2-PCB-04R1/
+production/PCB2-PCB-04R2/
 ```
 
-Manifest potwierdza wygenerowanie kompletu w KiCad 10.0.4 z rewizji `PCB2-PCB-04R1`.
+Manifest potwierdza wygenerowanie kompletu w KiCad 10.0.4 z rewizji `PCB2-PCB-04R2`.
 
 ### Gerbery
 
@@ -182,7 +182,7 @@ netlist/pcb-psu-led.d356
 140 × 80 mm
 FR-4
 1.6 mm
-2 oz copper
+1 oz copper
 solder mask both sides
 silkscreen both sides
 no panelization
@@ -239,5 +239,12 @@ Jeżeli portal producenta błędnie interpretuje `.gbrjob`, prześlij tylko sied
 - oznaczenia `L`, `N`, `LED+`, `0V`,
 - aktualne oznaczenie rewizji,
 - walidacja GitHub Actions: PASS,
-- wygenerowany i zapisany komplet produkcyjny,
-- aktualny zatwierdzony stan gałęzi `pcb2`.
+- wygenerowany komplet produkcyjny dla wariantu 2 oz.
+
+### PCB2-PCB-04R2
+
+- zmiana miedzi z 70 µm / 2 oz na 35 µm / 1 oz,
+- zachowanie nominalnej grubości PCB 1.6 mm,
+- aktualizacja stackupu i sitodruku,
+- aktualny wariant produkcyjny gałęzi `pcb2`,
+- rewizja wymaga ponownej walidacji i wygenerowania plików produkcyjnych.
