@@ -4,9 +4,10 @@ Moduł zasilania i sterowania diody LED dla customowego zasilacza step-down 230 
 
 ## Status projektu
 
-- Aktualna rewizja elektryczna: **ECAD-15**
+- Aktualna rewizja elektryczna: **ECAD-16**
 - Ostatnia rewizja dokumentacji: **DOC-05**
-- Schemat: **9 z 11 pozycji** (brakuje `R1`, `RV1`, `J2` — ECAD-16)
+- Schemat: **KOMPLETNY — 12 z 12 pozycji**
+- Etap 1 (schemat) — **zamknięty**
 - ERC bramkujący: **0 errors / 0 warnings**
 - Pełny ERC: **0 errors / 0 warnings**
 - Walidacja: wyłącznie przez **GitHub Actions**
@@ -14,7 +15,8 @@ Moduł zasilania i sterowania diody LED dla customowego zasilacza step-down 230 
 - Gałąź robocza: `main`
 - Gałąź `pcb2`: równoległy projekt drugiego zespołu, wspólny przodek ECAD-11 — **nie mergować**
 
-Ostrzeżenie `isolated_pin_label` dla `PLUS_5V_LED` zostało zamknięte w ECAD-15 przez dodanie `C3`.
+Obsada: `J1`, `F1`, `T1`, `D1`, `D2`, `C1`, `C2`, `U1`, `C3`, `R1`, `RV1`, `J2`.
+Dioda `Kingbright L-7104EC` znajduje się na panelu przednim, poza płytką — wychodzi przez `J2`.
 
 ## Zatwierdzona topologia
 
@@ -156,6 +158,21 @@ Warning:              PLUS_5V_LED connected to only one pin
 - ERC bramkujący: `0 errors`
 - pełny ERC: jedno oczekiwane ostrzeżenie dla tymczasowo jednoelementowej sieci `PLUS_5V_LED`
 
+### ECAD-16
+
+- dodano gałąź diody LED: `R1`, `RV1`, `J2` — **schemat kompletny**
+- nowe lokalne symbole `R` i `R_Potentiometer` w `pcb-psu-led.kicad_sym`
+  i w `lib_symbols` schematu
+- `J2` wykorzystuje istniejący symbol `Conn_01x02` z nadpisaniem `Value` na poziomie
+  instancji — bez tworzenia zbędnego symbolu
+- tor: `PLUS_5V_LED → R1 → LED_R → RV1.1`; `RV1.2 ↔ RV1.3 → LED_A → J2.1`; `J2.2 → CT_RAW`
+- suwak `RV1.2` zwarty z końcem `RV1.3` — reostat z zabezpieczeniem przed utratą
+  styku suwaka (rozwarcie suwaka nie gasi diody, tylko ustawia maksymalną rezystancję)
+- `R1 = 680 Ω / 0.6 W` — **FROZEN** wg `Rev. 6.4.1` poz. `E-09`, zakaz 560 Ω
+- prąd: `(5 − 1.9) / 680 ≈ 4.6 mA` maks., z `RV1` w szeregu do `~0.3 mA`
+  → wymóg `I_f < 1 mA` osiągalny pokrętłem
+- podstawa: `Rev. 6.4.1` §3.4 oraz poz. `E-04`, `E-09`, `E-10`
+
 ### ECAD-15
 
 - dodano kondensatory odsprzęgające stabilizatora: `C2`, `C3 = 100 nF X7R`
@@ -196,27 +213,28 @@ Warning:              PLUS_5V_LED connected to only one pin
 
 ## Następny etap
 
-**ECAD-16 — gałąź diody LED**
+**Etap 1 zamknięty.** Schemat kompletny, ERC `0 errors / 0 warnings`.
 
-- `R1 = 680 Ω / 0.6 W` (Vishay PR02) — rezystor stały, **FROZEN**, zakaz 560 Ω
-- `RV1 = Bourns 3296W 10 kΩ` cermet wieloobrotowy — regulacja jasności, w szeregu
-- `J2 = JST XH 2-pin` — wyjście na diodę Kingbright L-7104EC na panelu przednim
-- tor: `PLUS_5V_LED → R1 → RV1 → J2.1`; `J2.2 → CT_RAW`
-- podstawa: `Rev. 6.4.1` §3.4 oraz poz. `E-04`, `E-09`, `E-10`
-- zakres prądu: `(5 − 1.9) / 680 ≈ 4.6 mA` maks., z `RV1` do `~0.3 mA`
-  → wymóg `I_f < 1 mA` osiągalny pokrętłem
-- wymaga dwóch nowych symboli: `R` oraz `R_Potentiometer`
-- po tym commicie schemat jest kompletny: **11 pozycji, ERC 0/0**
+**Etap 2 — footprinty**
+
+Do przypisania pozostaje 12 footprintów. Metoda: kopie plików `.kicad_mod`
+ze stockowych bibliotek obrazu `ghcr.io/kicad/kicad:10.0-full` do `PSU_LED.pretty/`.
+Repo pozostaje samowystarczalne, tabele lokalne, geometria sprawdzona.
+Ręcznie tworzony pozostaje wyłącznie `Talema_70000K` — już zweryfikowany wobec karty.
+
+Uwaga krytyczna: `U1` w obudowie `TO-92` — karta ST rysuje pinout jako **bottom view**,
+a pinout `78L05` jest odwrotny niż `7805`. Patrz `docs/platform.md` §5.2.
 
 Kolejka:
 
 ```text
-ECAD-16   R1, RV1, J2 — gałąź LED
-────────  schemat kompletny
-etap 2    footprinty — kopie stockowe z obrazu 10.0-full + lokalna Talema
+etap 2    footprinty — kopie stockowe + lokalna Talema
 etap 3    PCB — netclasy MAINS/SELV, mains.kicad_dru, obrys, placement, DRC w CI
 etap 4    dokumentacja produkcyjna
 ```
+
+Pozycje otwarte blokujące etap 3: alokacja X/Y/Z płytki w bazie Valchromat,
+obrys i mocowanie, MPN złącz `J1` i `J2`, obudowa `F1`. Patrz `docs/platform.md` §7.
 
 ## Dokumenty źródłowe
 
