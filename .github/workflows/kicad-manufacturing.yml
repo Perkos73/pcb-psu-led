@@ -1,6 +1,11 @@
 name: KiCad Manufacturing
 
 on:
+  push:
+    branches:
+      - pcb2
+    paths:
+      - ".github/workflows/kicad-manufacturing.yml"
   workflow_dispatch:
 
 concurrency:
@@ -176,8 +181,8 @@ jobs:
           drill_dir="$output_dir/drill"
 
           required_layers=(
-            F_Cu
-            B_Cu
+            top_cu
+            bottom_cu
             F_Mask
             B_Mask
             F_Silkscreen
