@@ -220,9 +220,8 @@ jobs:
               cat /out/drc-full.rpt
 
               kicad-cli pcb export svg \
-                --output /out/board/front \
-                --layers F.Cu,F.Mask,F.Silkscreen,F.Fab \
-                --common-layers Edge.Cuts \
+                --output /out/board/front/pcb-front.svg \
+                --layers F.Cu,F.Mask,F.Silkscreen,F.Fab,Edge.Cuts \
                 --black-and-white \
                 --fit-page-to-board \
                 --exclude-drawing-sheet \
@@ -240,9 +239,8 @@ jobs:
               fi
 
               kicad-cli pcb export svg \
-                --output /out/board/back \
-                --layers B.Cu,B.Mask,B.Silkscreen,B.Fab \
-                --common-layers Edge.Cuts \
+                --output /out/board/back/pcb-back.svg \
+                --layers B.Cu,B.Mask,B.Silkscreen,B.Fab,Edge.Cuts \
                 --black-and-white \
                 --mirror \
                 --fit-page-to-board \
