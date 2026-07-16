@@ -22,7 +22,7 @@ env:
   SCH: pcb-psu-led.kicad_sch
   PRO: pcb-psu-led.kicad_pro
   DRU: pcb-psu-led.kicad_dru
-  REVISION: PCB2-PCB-04R1
+  REVISION: PCB2-PCB-04R2
 
 jobs:
   manufacture:
