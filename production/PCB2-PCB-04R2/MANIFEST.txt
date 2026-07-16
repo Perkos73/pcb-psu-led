@@ -1,0 +1,43 @@
+PCB PSU LED FABRICATION MANIFEST
+Revision: PCB2-PCB-04R2
+KiCad: 10.0.4
+Commit: d40e5b723a095a14f4e35828fc098150013cc546
+Generated UTC: 2026-07-16T20:52:49Z
+
+FILES
+       335  reports/erc-errors.rpt
+       484  reports/drc-errors.rpt
+       528  drill/pcb-psu-led-NPTH.drl
+       878  reports/drill-report.rpt
+       924  gerbers/pcb-psu-led-Edge_Cuts.gbr
+       969  drill/pcb-psu-led-PTH.drl
+      1948  reports/pcb-stats.rpt
+      2634  gerbers/pcb-psu-led-job.gbrjob
+      2859  netlist/pcb-psu-led.d356
+      4859  gerbers/pcb-psu-led-bottom_cu.gbr
+      6247  gerbers/pcb-psu-led-top_cu.gbr
+     61078  drill/pcb-psu-led-NPTH-drl_map.svg
+     78189  drill/pcb-psu-led-PTH-drl_map.svg
+     79939  gerbers/pcb-psu-led-B_Mask.gbr
+     79939  gerbers/pcb-psu-led-F_Mask.gbr
+     79949  gerbers/pcb-psu-led-B_Silkscreen.gbr
+    138708  gerbers/pcb-psu-led-F_Silkscreen.gbr
+
+SHA256
+598118a65e9dc3b9e9370bf5a480e56beecef1a757bdb7b232fa5503ad55a543  ./drill/pcb-psu-led-NPTH-drl_map.svg
+95c5bd3f14808d4883da094764d3876c1d71b1e7fff3452bfd7b355872ff2a8b  ./drill/pcb-psu-led-NPTH.drl
+01017dc7d5c126434dc906daa944b47dd1fcd4c8d3fcd1dc8eb567799b78bd01  ./drill/pcb-psu-led-PTH-drl_map.svg
+358bfe0b0175afdc2a6671382352eae31860d6e76e358b761754bd1735f391f3  ./drill/pcb-psu-led-PTH.drl
+2929e39a618f3e3ac0f8827f20fc130ef3aff4dac2a1e09f1b692c9812b4f203  ./gerbers/pcb-psu-led-B_Mask.gbr
+c8b31de1f995402799294e030e75421f040b10a31be5b1a4e107bd9a35e7a001  ./gerbers/pcb-psu-led-B_Silkscreen.gbr
+8e0b2bbdba39b754029d3618b613389653b9cef7cdc9b78b6e8164835212bb7a  ./gerbers/pcb-psu-led-Edge_Cuts.gbr
+261fd1d00236a4209f3c65ed04507f15b7c347240e060bf3a1b3c2e5c3eca23b  ./gerbers/pcb-psu-led-F_Mask.gbr
+dc76b2466a3b7f10f19e95b58a60c5cfc67341776ca9fee09cddd04a1fca4100  ./gerbers/pcb-psu-led-F_Silkscreen.gbr
+acdb3afbfdc7263d53c9f834ef8f08a94fe1fbbdda5d594d0225ee842540f06e  ./gerbers/pcb-psu-led-bottom_cu.gbr
+8b067653f8b5ff949c45a44b4ce93c18131998e92b9ea1d857cc0cb772dc6d8f  ./gerbers/pcb-psu-led-job.gbrjob
+fbc6b6b687cca6a4d5dd8918a426985c4218026e74c7aacdd77c7dc56ba3c353  ./gerbers/pcb-psu-led-top_cu.gbr
+923b9faf711de739e1bf2083d026c1ffe29eb15e418c689e1650a52ecf612fe4  ./netlist/pcb-psu-led.d356
+738e0e85c976e7ba4396233162121e03fa62b45716342b0ce254fc6a90fef02a  ./reports/drc-errors.rpt
+1b464ef86e351bbed8937126f9134f45bf273194b7fe2edbb5de76e5c9714cbb  ./reports/drill-report.rpt
+0bf75258d6e645fa911442c85caa47c4ec8ad1f3fd437fc14731be5c09763b0e  ./reports/erc-errors.rpt
+6453202567a0076f02c493f32103885fbd437d02a39fc0601dbe55f06d408974  ./reports/pcb-stats.rpt

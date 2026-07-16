@@ -1,0 +1,29 @@
+Drill report for pcb-psu-led.kicad_pcb
+Created on 2026-07-16T20:52:49
+
+Copper Layer Stackup:
+    =============================================================
+    L1 :  top_cu                    front
+    L2 :  bottom_cu                 back
+
+
+Drill file 'pcb-psu-led-PTH.drl' contains
+    plated through holes:
+    =============================================================
+    T1  0.750mm  0.0295"  (3 holes))
+    T2  0.800mm  0.0315"  (11 holes))
+    T3  1.000mm  0.0394"  (2 holes))
+    T4  1.200mm  0.0472"  (4 holes))
+    T5  1.300mm  0.0512"  (12 holes))
+
+    Total plated holes count 32
+
+
+Drill file 'pcb-psu-led-NPTH.drl' contains
+    unplated through holes:
+    =============================================================
+    T1  2.700mm  0.1063"  (1 hole)
+    T2  3.200mm  0.1260"  (4 holes))
+    T3  4.300mm  0.1693"  (1 hole)
+
+    Total unplated holes count 6

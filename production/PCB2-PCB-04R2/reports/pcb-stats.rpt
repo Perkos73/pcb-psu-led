@@ -1,0 +1,61 @@
+PCB statistics report
+=====================
+- Date: Thu Jul 16 20:52:47 2026
+- Project: pcb-psu-led
+- Board name: pcb-psu-led
+
+Board
+-----
+- Width: 140.0000 mm
+- Height: 80.0000 mm
+- Area: 11115.262 mm²
+- Front copper area: 404.706 mm²
+- Back copper area: 189.937 mm²
+- Min track clearance: 0.5700 mm
+- Min track width: 0.6000 mm
+- Min drill diameter: 0.7500 mm
+- Board stackup thickness: 1.6000 mm
+
+- Front footprint area: 2814.614 mm²
+- Back footprint area: 233.668 mm²
+- Front component density: 25.32 %
+- Back component density: 2.10 %
+Pads
+----
+- Through hole: 32
+- SMD: 0
+- Connector: 0
+- NPTH: 6
+- Castellated: 0
+- Press-fit: 0
+
+Vias
+----
+- Through vias: 0
+- Blind vias: 0
+- Buried vias: 0
+- Micro vias: 0
+
+Components
+----------
+
+|              | Front Side | Back Side | Total |
+|--------------|------------|-----------|-------|
+|THT:          |         12 |         0 |    12 |
+|SMD:          |          0 |         0 |     0 |
+|Unspecified:  |          4 |         0 |     4 |
+|Total:        |         16 |         0 |    16 |
+
+Drill holes
+-----------
+
+| Count | Shape |    X Size |    Y Size | Plated | Via/Pad | Start Layer | Stop Layer |
+|-------|-------|-----------|-----------|--------|---------|-------------|------------|
+|    12 | Round | 1.3000 mm | 1.3000 mm |    PTH |     Pad |      top_cu |  bottom_cu |
+|    11 | Round | 0.8000 mm | 0.8000 mm |    PTH |     Pad |      top_cu |  bottom_cu |
+|     4 | Round | 1.2000 mm | 1.2000 mm |    PTH |     Pad |      top_cu |  bottom_cu |
+|     4 | Round | 3.2000 mm | 3.2000 mm |   NPTH |     Pad |      top_cu |  bottom_cu |
+|     3 | Round | 0.7500 mm | 0.7500 mm |    PTH |     Pad |      top_cu |  bottom_cu |
+|     2 | Round | 1.0000 mm | 1.0000 mm |    PTH |     Pad |      top_cu |  bottom_cu |
+|     1 | Round | 2.7000 mm | 2.7000 mm |   NPTH |     Pad |      top_cu |  bottom_cu |
+|     1 | Round | 4.3000 mm | 4.3000 mm |   NPTH |     Pad |      top_cu |  bottom_cu |
