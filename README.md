@@ -26,16 +26,13 @@ Lokalny symbol:
 
 Aktualne połączenia:
 
-- `L_SW → T1.6`
-- `N_SW → T1.3`
+- `J1.1 → L_SW → F1.1`
+- `F1.2 → L_FUSED → T1.6`
+- `J1.2 → N_SW → T1.3`
 - `T1.5 ↔ T1.4 = PRI_LINK_5_4`
 
-Planowana zmiana ECAD-12:
-
-- `J1.1 / L_SW → F1 → T1.6`
-- `F1 = T32 mA / 250 V, 5×20 mm`
-- bezpiecznik wyłącznie w przewodzie fazowym
-- neutralny i pozostałe połączenia transformatora pozostają bez zmian
+Bezpiecznik `F1` wyłącznie w przewodzie fazowym. Neutralny bez zabezpieczenia —
+rozłączanie obu przewodów realizuje wyłącznik NKK M2022SS4W01 (DPDT).
 
 ### Transformator
 
@@ -155,6 +152,17 @@ Warning:              PLUS_5V_LED connected to only one pin
 - ERC bramkujący: `0 errors`
 - pełny ERC: jedno oczekiwane ostrzeżenie dla tymczasowo jednoelementowej sieci `PLUS_5V_LED`
 
+### ECAD-14
+
+- dodano bezpiecznik pierwotny `F1 = T32 mA / 250 V` zwłoczny
+- nowy lokalny symbol `Fuse` w `pcb-psu-led.kicad_sym` i w `lib_symbols` schematu
+- tor fazowy rozdzielony na dwie sieci: `L_SW` (J1.1 → F1.1) i `L_FUSED` (F1.2 → T1.6)
+- podstawa: karta 700xxK, `230V Fuse mA (Max.)` = `32 mA` dla rodziny `1.6 VA`
+- zamrożony `T500 mA` w module SCI PC-5 jest `15.6×` powyżej maksimum producenta
+  i nie zareaguje na awarię tego transformatora
+- `J1`, `T1`, przewód neutralny, mostek `T1.5 ↔ T1.4` i strona wtórna — bez zmian
+- obudowa (`5×20` vs `TR5`) rozstrzygana na etapie placementu; symbol wspólny
+
 ### ECAD-13
 
 - `pcb-psu-led.kicad_sch:890` — instancja `J1`, pole `Datasheet` `"~"` → `""`
@@ -173,19 +181,17 @@ Warning:              PLUS_5V_LED connected to only one pin
 
 ## Następny etap
 
-**ECAD-14 — zabezpieczenie pierwotne transformatora T1**
+**ECAD-15 — kondensatory odsprzęgające U1**
 
-- `F1 = T32 mA / 250 V zwłoczny`, w przewodzie fazowym pomiędzy `J1.1 / L_SW` a `T1.6`
-- podstawa: karta 700xxK, kolumna `230V Fuse mA (Max.)` = `32 mA` dla `1.6 VA`
-- zamrożony `T500 mA` w module SCI PC-5 jest `15.6×` powyżej maksimum producenta
-  i nie zareaguje na awarię tego transformatora
-- nie zmieniać przewodu neutralnego, mostka `T1.5 ↔ T1.4`, strony wtórnej ani regulatora
-- obudowa bezpiecznika (5×20 vs TR5) rozstrzygana na etapie placementu — symbol ten sam
+- `C2`, `C3 = 100 nF X7R` — bypass wejścia i wyjścia stabilizatora
+- `C2`: `VRAW_PLUS ↔ CT_RAW`, blisko `U1.3`
+- `C3`: `PLUS_5V_LED ↔ CT_RAW`, blisko `U1.1`
+- podstawa: `Rev. 6.4.1` poz. `E-08` (2 szt. 100 nF X7R)
+- `C3` domyka sieć `PLUS_5V_LED` → znika ostrzeżenie `isolated_pin_label`
 
 Kolejka:
 
 ```text
-ECAD-14   F1 = T32 mA / 250 V zwłoczny
 ECAD-15   C2, C3 = 100 nF X7R — bypass wejścia i wyjścia U1
 ECAD-16   R1 = 680 Ω / 0.6 W, RV1 = Bourns 3296W 10 kΩ, J2 = JST XH 2-pin
 ────────  schemat kompletny: 11 pozycji, ERC 0/0

@@ -601,6 +601,81 @@
       )
     )
   )
+  (symbol "PSU_LED:Fuse"
+    (pin_names (offset 1.016) (hide yes))
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (in_pos_files yes)
+    (duplicate_pin_numbers_are_jumpers no)
+    (property "Reference" "F"
+      (at 0 2.54 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "Fuse"
+      (at 0 -2.54 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Datasheet" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Description" "Primary fuse, time-lag; Talema 700xxK datasheet specifies 32 mA maximum for the 1.6 VA family at 230 V"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "ki_keywords" "fuse protection primary mains"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (symbol "Fuse_0_1"
+      (rectangle
+        (start -2.54 1.016)
+        (end 2.54 -1.016)
+        (stroke (width 0.254) (type default))
+        (fill (type none))
+      )
+      (polyline
+        (pts (xy -2.54 0) (xy 2.54 0))
+        (stroke (width 0.254) (type default))
+        (fill (type none))
+      )
+    )
+    (symbol "Fuse_1_1"
+      (pin passive line
+        (at -5.08 0 0)
+        (length 2.54)
+        (name "1" (effects (font (size 1.27 1.27))))
+        (number "1" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at 5.08 0 180)
+        (length 2.54)
+        (name "2" (effects (font (size 1.27 1.27))))
+        (number "2" (effects (font (size 1.27 1.27))))
+      )
+    )
+  )
   (symbol "PSU_LED:LM78L05ACZ"
     (pin_names (offset 1.016))
     (exclude_from_sim no)
@@ -705,20 +780,12 @@
     (uuid "d76492fc-9e50-4a96-b0f6-f7561faf33e3")
   )
   (wire
-    (pts (xy 83.82 100.33) (xy 83.82 93.98))
+    (pts (xy 83.82 100.33) (xy 83.82 86.36))
     (stroke
       (width 0)
       (type default)
     )
     (uuid "47c6f3fd-50e9-497c-ada1-1eeab5fddd04")
-  )
-  (wire
-    (pts (xy 83.82 93.98) (xy 93.98 93.98))
-    (stroke
-      (width 0)
-      (type default)
-    )
-    (uuid "d3348e49-279c-4333-9f0e-1c6546687d8b")
   )
   (wire
     (pts (xy 77.47 102.87) (xy 86.36 102.87))
@@ -751,6 +818,21 @@
       (type default)
     )
     (uuid "3c53944d-ccbc-4803-930c-173c2dcf5b2f")
+  )
+  (wire
+    (pts (xy 93.98 86.36) (xy 93.98 93.98))
+    (stroke
+      (width 0)
+      (type default)
+    )
+    (uuid "50270d7b-7e1f-4456-90f8-927a233a3670")
+  )
+  (label "L_FUSED"
+    (at 93.98 90.17 90)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "eb1b4ce1-1ff5-4857-bb86-5907285a0dd3")
   )
   (label "L_SW"
     (at 83.82 93.98 0)
@@ -857,6 +939,78 @@
       (font (size 1.27 1.27))
     )
     (uuid "dcd34743-1c6b-47f4-888c-79863fdbfda6")
+  )
+  (symbol
+    (lib_id "PSU_LED:Fuse")
+    (at 88.9 86.36 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced yes)
+    (uuid "5147511c-4586-4472-839d-56a239f12f5a")
+    (property "Reference" "F1"
+      (at 88.9 83.82 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Value" "T32mA 250V"
+      (at 88.9 88.9 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Footprint" ""
+      (at 88.9 86.36 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Datasheet" ""
+      (at 88.9 86.36 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Description" "Primary fuse T32 mA 250 V time-lag; Talema 700xxK 230V Fuse (Max.) = 32 mA for 1.6 VA"
+      (at 88.9 86.36 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Manufacturer" ""
+      (at 88.9 86.36 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "MPN" "TBD"
+      (at 88.9 86.36 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (pin "1"
+      (uuid "89c4d2d8-a200-4f69-96d0-4bff3ba0f798")
+    )
+    (pin "2"
+      (uuid "e7040970-a385-4963-913a-444b9fbafa8c")
+    )
+    (instances
+      (project "pcb-psu-led"
+        (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
+          (reference "F1")
+          (unit 1)
+        )
+      )
+    )
   )
   (symbol
     (lib_id "PSU_LED:Conn_01x02")
