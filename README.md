@@ -4,13 +4,15 @@ Moduł zasilania i sterowania diody LED dla customowego zasilacza step-down 230 
 
 ## Status projektu
 
-- Aktualna rewizja elektryczna: **ECAD-09**
-- Status ERC: **0 errors / 0 warnings**
+- Aktualna rewizja elektryczna: **ECAD-11**
+- ERC bramkujący: **0 errors / 0 warnings**
+- Pełny ERC: **0 errors / 1 warning**
+- Otwarte ostrzeżenie: `isolated_pin_label` dla sieci `PLUS_5V_LED`
 - Walidacja: wyłącznie przez **GitHub Actions**
 - Wersja KiCad w CI: **10.0.4**
 - Gałąź robocza: `main`
 
-Checkpoint ECAD-09 jest zamrożony. Symbol J1, jego piny, pola, UUID, położenie oraz połączenia nie powinny być zmieniane bez osobnego ECO.
+Ostrzeżenie `PLUS_5V_LED` jest oczekiwane na obecnym etapie: wyjście U1 jest już utworzone, ale kolejny element tej sieci nie został jeszcze dodany.
 
 ## Zatwierdzona topologia
 
@@ -22,11 +24,26 @@ Lokalny symbol:
 - `J1.1 = L_SW`
 - `J1.2 = N_SW`
 
-Połączenia:
+Aktualne połączenia:
 
 - `L_SW → T1.6`
 - `N_SW → T1.3`
 - `T1.5 ↔ T1.4 = PRI_LINK_5_4`
+
+Planowana zmiana ECAD-12:
+
+- `J1.1 / L_SW → F1 → T1.6`
+- `F1 = T32 mA / 250 V, 5×20 mm`
+- bezpiecznik wyłącznie w przewodzie fazowym
+- neutralny i pozostałe połączenia transformatora pozostają bez zmian
+
+### Transformator
+
+- `T1 = Talema 70000K`
+- moc znamionowa: `1.6 VA`
+- dwa uzwojenia pierwotne `115 V`
+- dwa uzwojenia wtórne `7 V`
+- lokalny symbol i footprint przechodzą walidację CI
 
 ### Uzwojenie wtórne i prostownik
 
@@ -36,10 +53,26 @@ Połączenia:
 - katody `D1` i `D2 → VRAW_PLUS`
 - `D1`, `D2 = BYV26C`
 
-### Transformator
+### Kondensator zbiorczy
 
-- `T1 = Talema 70000K`
-- lokalny symbol i footprint przechodzą walidację CI
+- `C1 = 47 µF / 25 V Panasonic FR`
+- `C1 (+) → VRAW_PLUS`
+- `C1 (−) → CT_RAW`
+
+### Stabilizator
+
+- `U1 = LM78L05ACZ`
+- `U1.3 VIN → VRAW_PLUS`
+- `U1.2 GND → CT_RAW`
+- `U1.1 VOUT → PLUS_5V_LED`
+
+Pinout projektu:
+
+```text
+1 = VOUT
+2 = GND
+3 = VIN
+```
 
 ## Pliki projektu
 
@@ -50,6 +83,7 @@ Połączenia:
 - `sym-lib-table` — mapowanie lokalnej biblioteki symboli
 - `fp-lib-table` — mapowanie lokalnej biblioteki footprintów
 - `.github/workflows/kicad-validate.yml` — workflow walidacyjny
+- `README.md` — dokumentacja zatwierdzonego stanu projektu
 
 ## Walidacja CI
 
@@ -77,7 +111,8 @@ Aktualny wynik:
 ```text
 Validation exit code: 0
 ERC gating report:    0 errors / 0 warnings
-Full ERC report:      0 errors / 0 warnings
+Full ERC report:      0 errors / 1 warning
+Warning:              PLUS_5V_LED connected to only one pin
 ```
 
 ## Zasady pracy
@@ -89,31 +124,51 @@ Full ERC report:      0 errors / 0 warnings
 - pliki przekazywane pojedynczo z kanonicznymi nazwami,
 - bez dużych generatorów i masowego nadpisywania plików,
 - zmiany w kilku plikach należące do jednego ECO muszą trafić do jednego commitu,
-- przed kolejnym etapem elektrycznym wymagane jest zielone CI.
+- przed kolejnym etapem należy sprawdzić pełny raport ERC w Step Summary.
 
-## Historia ostatnich rewizji
+## Historia rewizji
 
 ### ECAD-08
 
-- kanonizacja zapisu `pin_names` dla J1:
-  - z legacy `hide`
-  - na `(hide yes)`
-
-Zmiana nie usunęła ostrzeżenia `lib_symbol_mismatch`.
+- zapis `pin_names` J1 znormalizowany do formy `(hide yes)`
+- zmiana nie usunęła ostrzeżenia `lib_symbol_mismatch`
 
 ### ECAD-09
 
-- ujednolicenie pola `Datasheet` symbolu `Conn_01x02`
-- ustawienie pustego ciągu `""` w bibliotece oraz osadzonej kopii symbolu
+- pole `Datasheet` symbolu `Conn_01x02` ujednolicone do pustego ciągu `""`
+- usunięto `lib_symbol_mismatch`
+- ERC osiągnął `0 errors / 0 warnings`
 
-Ta zmiana usunęła `lib_symbol_mismatch`.
+### ECAD-10
+
+- dodano kondensator zbiorczy `C1`
+- `C1 = 47 µF / 25 V Panasonic FR`
+- połączenie między `VRAW_PLUS` i `CT_RAW`
+- ERC: `0 errors / 0 warnings`
+
+### ECAD-11
+
+- dodano stabilizator `U1 = LM78L05ACZ`
+- `VIN → VRAW_PLUS`
+- `GND → CT_RAW`
+- `VOUT → PLUS_5V_LED`
+- ERC bramkujący: `0 errors`
+- pełny ERC: jedno oczekiwane ostrzeżenie dla tymczasowo jednoelementowej sieci `PLUS_5V_LED`
 
 ## Następny etap
 
-Po zatwierdzeniu tego README jako osobnego commitu dokumentacyjnego można rozpocząć **ECAD-10** — kolejny etap rozbudowy schematu.
+**ECAD-12 — zabezpieczenie pierwotne transformatora T1**
 
-Commit dokumentacyjny:
+Zakres:
+
+- dodać `F1 = T32 mA / 250 V, 5×20 mm`,
+- włączyć F1 pomiędzy `J1.1 / L_SW` a `T1.6`,
+- nie zmieniać przewodu neutralnego,
+- nie zmieniać mostka `T1.5 ↔ T1.4`,
+- nie zmieniać strony wtórnej ani układu regulatora.
+
+Planowany commit elektryczny:
 
 ```text
-DOC-01: add project README
+ECAD-12: add primary fuse F1
 ```
