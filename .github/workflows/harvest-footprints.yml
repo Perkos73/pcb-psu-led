@@ -1,9 +1,5 @@
 name: Harvest Stock Footprints
 
-# Zadanie jednorazowe, uruchamiane recznie. Wyjmuje kandydatow na footprinty
-# ze stockowych bibliotek zamrozonego obrazu KiCad i publikuje je jako artefakt.
-# Po wybraniu wlasciwych plikow ten workflow zostaje usuniety (wzorzec CI-DIAG-01 -> CI-CLEAN-01).
-
 on:
   workflow_dispatch:
 
@@ -17,82 +13,47 @@ jobs:
   harvest:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-
     steps:
-      - name: Prepare output dir
-        run: |
-          set -euo pipefail
-          rm -rf "$RUNNER_TEMP/h"
-          mkdir -p "$RUNNER_TEMP/h/out" "$RUNNER_TEMP/h/candidates"
-
-      - name: Harvest
+      - name: Harvest names to log
         run: |
           set +e
-          docker run --rm \
-            --user "$(id -u):$(id -g)" \
-            -e HOME=/home/kicad \
-            -v "$RUNNER_TEMP/h/out:/out" \
-            "$KICAD_IMAGE" bash -c '
-              set -u
-              ver="$(kicad-cli version 2>&1 | tr -d "\r")"
-              echo "KiCad: $ver" | tee /out/00_KICAD_VERSION.txt
+          docker run --rm "$KICAD_IMAGE" bash -c '
+            set -u
+            echo "=== KICAD ==="
+            kicad-cli version 2>&1 | tr -d "\r"
 
-              ROOT=""
-              for d in /usr/share/kicad/footprints /usr/share/kicad/modules; do
-                [ -d "$d" ] && ROOT="$d" && break
-              done
-              if [ -z "$ROOT" ]; then
-                echo "STOCK FOOTPRINTS NOT FOUND - is this the -full image?"
-                ls -la /usr/share/kicad/ 2>&1
-                exit 80
-              fi
-              echo "root: $ROOT" | tee -a /out/00_KICAD_VERSION.txt
-              du -sh "$ROOT" | tee -a /out/00_KICAD_VERSION.txt
+            ROOT=""
+            for d in /usr/share/kicad/footprints /usr/share/kicad/modules; do
+              [ -d "$d" ] && ROOT="$d" && break
+            done
+            if [ -z "$ROOT" ]; then
+              echo "STOCK FOOTPRINTS NOT FOUND"; ls -la /usr/share/kicad/ 2>&1; exit 80
+            fi
+            echo "root: $ROOT"
 
-              # pelny spis interesujacych bibliotek
-              for lib in Fuse Package_TO_SOT_THT Diode_THT Capacitor_THT Resistor_THT \
-                         Potentiometer_THT Connector_JST TerminalBlock_Phoenix \
-                         Connector_PinHeader_2.54mm Inductor_THT; do
-                if [ -d "$ROOT/$lib.pretty" ]; then
-                  ls "$ROOT/$lib.pretty" | sed "s/\.kicad_mod$//" > "/out/01_list_$lib.txt"
-                  echo "$lib: $(wc -l < /out/01_list_$lib.txt) footprintow"
-                else
-                  echo "$lib: BRAK BIBLIOTEKI"
-                fi
-              done | tee /out/02_summary.txt
+            m() {
+              echo ""
+              echo "=== $1 ==="
+              lib="$2"; shift 2
+              if [ ! -d "$ROOT/$lib.pretty" ]; then echo "BRAK BIBLIOTEKI $lib"; return 0; fi
+              for pat in "$@"; do
+                find "$ROOT/$lib.pretty" -maxdepth 1 -iname "$pat.kicad_mod" -printf "%f\n" 2>/dev/null
+              done | sed "s/\.kicad_mod$//" | sort -u
+            }
 
-              # kandydaci wg wzorcow
-              mkdir -p /out/candidates
-              copy() {
-                lib="$1"; pat="$2"
-                [ -d "$ROOT/$lib.pretty" ] || return 0
-                find "$ROOT/$lib.pretty" -maxdepth 1 -iname "$pat.kicad_mod" -exec cp {} /out/candidates/ \; 2>/dev/null
-              }
-              copy Fuse                "*Fuseholder*5x20*"
-              copy Fuse                "*Clip*5x20*"
-              copy Package_TO_SOT_THT  "TO-92*"
-              copy Diode_THT           "D_DO-15*"
-              copy Diode_THT           "D_DO-41*"
-              copy Diode_THT           "D_A-405*"
-              copy Capacitor_THT       "CP_Radial_D5.0mm_P2.50mm*"
-              copy Capacitor_THT       "CP_Radial_D6.3mm_P2.50mm*"
-              copy Capacitor_THT       "CP_Radial_D8.0mm_P3.50mm*"
-              copy Capacitor_THT       "C_Disc_D5*P5.00mm*"
-              copy Capacitor_THT       "C_Disc_D6*P5.00mm*"
-              copy Capacitor_THT       "C_Rect*P5.00mm*"
-              copy Resistor_THT        "R_Axial_DIN0207*"
-              copy Resistor_THT        "R_Axial_DIN0309*"
-              copy Resistor_THT        "R_Axial_DIN0411*"
-              copy Potentiometer_THT   "*3296*"
-              copy Connector_JST       "JST_XH_B2B-XH-A*"
-              copy Connector_JST       "JST_XH_S2B-XH-A*"
-              copy TerminalBlock_Phoenix "*10.16mm*"
-              copy TerminalBlock_Phoenix "*MPT*"
-
-              echo "--- kandydatow: $(ls /out/candidates | wc -l)"
-              ls -l /out/candidates | tee /out/03_candidates.txt
-            ' 2>&1 | tee "$RUNNER_TEMP/h/out/99_run.log"
-          status=${PIPESTATUS[0]}
+            m "F1 bezpiecznik 5x20"  Fuse "*5x20*"
+            m "U1 TO-92"             Package_TO_SOT_THT "TO-92*"
+            m "D1 D2 dioda osiowa"   Diode_THT "D_DO-15*" "D_DO-41*" "D_A-405*"
+            m "C1 elektrolit"        Capacitor_THT "CP_Radial_D5.0mm_P2.50mm*" "CP_Radial_D6.3mm_P2.50mm*" "CP_Radial_D8.0mm_P3.50mm*"
+            m "C2 C3 ceramika P5"    Capacitor_THT "C_Disc_D5*P5.00mm*" "C_Disc_D6*P5.00mm*" "C_Rect*P5.00mm*"
+            m "R1 rezystor osiowy"   Resistor_THT "R_Axial_DIN0207*" "R_Axial_DIN0309*" "R_Axial_DIN0411*"
+            m "RV1 Bourns 3296"      Potentiometer_THT "*3296*"
+            m "J2 JST XH"            Connector_JST "*XH*2B-XH-A*"
+            m "J1 Phoenix 10.16"     TerminalBlock_Phoenix "*10.16mm*2*"
+            echo ""
+            echo "=== KONIEC ==="
+          '
+          status=$?
           set -e
           case "$status" in
             0)   echo "OK" ;;
@@ -101,12 +62,3 @@ jobs:
             *)   echo "::error::Unexpected exit $status" ;;
           esac
           exit "$status"
-
-      - name: Upload harvest
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: stock-footprints-harvest
-          path: ${{ runner.temp }}/h/out
-          if-no-files-found: error
-          retention-days: 7
