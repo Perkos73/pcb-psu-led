@@ -6,9 +6,9 @@
   (paper "A4")
   (title_block
   (title "PCB PSU LED")
-  (rev "PCB2-ECAD-03R1")
+  (rev "PCB2-ECAD-04")
   (company "Custom Step-Down PSU 230 V to 100 V")
-  (comment 1 "RV1 wiper connected to output node")
+  (comment 1 "Production footprints and exact mechanical parts assigned")
 )
 (lib_symbols
   (symbol "PSU_LED:Conn_01x02"
@@ -1392,21 +1392,21 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal"
       (at 72.39 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Datasheet" ""
+    (property "Datasheet" "https://www.phoenixcontact.com/en-pc/products/pcb-terminal-block-mkds-15-2-508-1715721"
       (at 72.39 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Description" "2-pin mains input from NKK switch; exact Phoenix Contact part pending"
+    (property "Description" "Phoenix Contact MKDS 1,5/2-5,08 PCB terminal block, 2 positions, 5.08 mm pitch"
       (at 72.39 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1420,7 +1420,7 @@
         (hide yes)
       )
     )
-    (property "MPN" "TBD"
+    (property "MPN" "1715721"
       (at 72.39 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1464,35 +1464,35 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "Fuse:Fuseholder_Cylinder-5x20mm_Schurter_0031_8201_Horizontal_Open"
       (at 88.9 93.98 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Datasheet" ""
+    (property "Datasheet" "https://www.schurter.com/en/datasheet/typ_ogn.pdf"
       (at 88.9 93.98 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Description" "Time-lag fuse, 32 mA, 250 V, 5x20 mm, primary protection for T1"
+    (property "Description" "Schurter OGN horizontal open PCB fuseholder for 5x20 mm fuse"
       (at 88.9 93.98 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Manufacturer" "TBD"
+    (property "Manufacturer" "Schurter"
       (at 88.9 93.98 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "MPN" "TBD"
+    (property "MPN" "0031.8201"
       (at 88.9 93.98 0)
       (effects
         (font (size 1.27 1.27))
@@ -1532,7 +1532,7 @@
       (at 120.65 96.52 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" ""
+    (property "Footprint" "Diode_THT:D_DO-15_P10.16mm_Horizontal"
       (at 120.65 93.98 0)
       (effects
         (font (size 1.27 1.27))
@@ -1600,7 +1600,7 @@
       (at 120.65 111.76 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" ""
+    (property "Footprint" "Diode_THT:D_DO-15_P10.16mm_Horizontal"
       (at 120.65 109.22 0)
       (effects
         (font (size 1.27 1.27))
@@ -1672,14 +1672,14 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "Package_TO_SOT_THT:TO-92_Inline"
       (at 160.02 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Datasheet" ""
+    (property "Datasheet" "https://www.ti.com/lit/ds/symlink/lm78l.pdf"
       (at 160.02 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1700,7 +1700,7 @@
         (hide yes)
       )
     )
-    (property "MPN" "LM78L05ACZ"
+    (property "MPN" "LM78L05ACZ/NOPB"
       (at 160.02 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1747,14 +1747,14 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "Capacitor_THT:CP_Radial_D5.0mm_P2.00mm"
       (at 134.62 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Datasheet" ""
+    (property "Datasheet" "https://industrial.panasonic.com/ww/products/pt/aluminum-cap-lead/models/EEUFR1E470"
       (at 134.62 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1775,7 +1775,7 @@
         (hide yes)
       )
     )
-    (property "MPN" "EEU-FR1E470"
+    (property "MPN" "EEUFR1E470"
       (at 134.62 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1813,41 +1813,41 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Value" "100nF X7R"
+    (property "Value" "100nF 50V X7R"
       (at 151.13 100.33 0)
       (effects
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm"
       (at 147.32 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Datasheet" ""
+    (property "Datasheet" "https://yageogroup.com/download/specsheet/C315C104K5R5TA"
       (at 147.32 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Description" "100 nF X7R THT local decoupling capacitor"
+    (property "Description" "KEMET GoldMax 100 nF, 50 V, X7R radial ceramic capacitor, 2.54 mm pitch"
       (at 147.32 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Manufacturer" "TBD"
+    (property "Manufacturer" "KEMET"
       (at 147.32 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "MPN" "TBD"
+    (property "MPN" "C315C104K5R5TA"
       (at 147.32 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1885,41 +1885,41 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Value" "100nF X7R"
+    (property "Value" "100nF 50V X7R"
       (at 176.53 100.33 0)
       (effects
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm"
       (at 172.72 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Datasheet" ""
+    (property "Datasheet" "https://yageogroup.com/download/specsheet/C315C104K5R5TA"
       (at 172.72 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Description" "100 nF X7R THT local decoupling capacitor"
+    (property "Description" "KEMET GoldMax 100 nF, 50 V, X7R radial ceramic capacitor, 2.54 mm pitch"
       (at 172.72 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Manufacturer" "TBD"
+    (property "Manufacturer" "KEMET"
       (at 172.72 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "MPN" "TBD"
+    (property "MPN" "C315C104K5R5TA"
       (at 172.72 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1957,41 +1957,41 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Value" "3.3k 0.25W"
+    (property "Value" "3.3k 0.6W 1%"
       (at 182.88 97.79 0)
       (effects
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
       (at 182.88 93.98 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Datasheet" ""
+    (property "Datasheet" "https://www.vishay.com/docs/28724/mrs16m25.pdf"
       (at 182.88 93.98 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Description" "Fixed series current-limiting resistor for panel LED"
+    (property "Description" "Vishay MRS25 metal-film resistor, 3.3 kohm, 0.6 W, 1%"
       (at 182.88 93.98 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Manufacturer" "TBD"
+    (property "Manufacturer" "Vishay"
       (at 182.88 93.98 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "MPN" "TBD"
+    (property "MPN" "MRS25000C3301FCT00"
       (at 182.88 93.98 0)
       (effects
         (font (size 1.27 1.27))
@@ -2035,7 +2035,7 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "Potentiometer_THT:Potentiometer_Bourns_3386P_Vertical"
       (at 195.58 93.98 0)
       (effects
         (font (size 1.27 1.27))
@@ -2104,41 +2104,41 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Value" "LED PANEL OUT"
+    (property "Value" "LED PANEL OUT JST XH"
       (at 215.9 105.41 0)
       (effects
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
       (at 215.9 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Datasheet" ""
+    (property "Datasheet" "https://www.jst-mfg.com/product/pdf/eng/eXH.pdf"
       (at 215.9 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Description" "Two-pin output connector to panel-mounted Kingbright WP7113ED LED; pin 1 anode, pin 2 cathode"
+    (property "Description" "JST XH 2-position vertical PCB header for panel LED wiring"
       (at 215.9 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "Manufacturer" "TBD"
+    (property "Manufacturer" "JST"
       (at 215.9 101.6 0)
       (effects
         (font (size 1.27 1.27))
         (hide yes)
       )
     )
-    (property "MPN" "TBD"
+    (property "MPN" "B2B-XH-A(LF)(SN)"
       (at 215.9 101.6 0)
       (effects
         (font (size 1.27 1.27))
