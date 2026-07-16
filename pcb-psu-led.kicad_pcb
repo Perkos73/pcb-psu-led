@@ -10,7 +10,7 @@
   (title_block
     (title "PCB PSU LED")
     (date "2026-07-16")
-    (rev "PCB2-PCB-03R2")
+    (rev "PCB2-PCB-03R3")
     (company "Custom Step-Down PSU 230 V to 100 V")
     (comment 1 "Schematic-synchronized routed board")
   )
@@ -408,7 +408,7 @@
   		)
   	)
   )
-  (footprint "Fuse:Fuseholder_Cylinder-5x20mm_Schurter_0031_8201_Horizontal_Open"
+  (footprint "PSU_LED:Fuseholder_Cylinder-5x20mm_Schurter_0031_8201_Horizontal_Open"
     (layer "F.Cu")
     (uuid "97e58912-a983-4711-a0b6-09ddcee2d621")
     (at 127.5 22 180)
@@ -3157,7 +3157,7 @@
   		)
   	)
   )
-  (footprint "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
+  (footprint "PSU_LED:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
     (layer "F.Cu")
     (uuid "cd210301-8304-4210-af41-719a4949e2d4")
     (at 10 60 90)
@@ -3831,11 +3831,11 @@
   (gr_arc (start 2 80) (mid 0.5858 79.4142) (end 0 78) (stroke (width 0.2) (type default)) (layer "Edge.Cuts") (uuid "7923fff0-df40-47c7-99fa-c6996251ee4e"))
   (gr_line (start 0 78) (end 0 2) (stroke (width 0.2) (type default)) (layer "Edge.Cuts") (uuid "535bc4b5-a73b-4a8e-b934-f78fecd2f05b"))
   (gr_arc (start 0 2) (mid 0.5858 0.5858) (end 2 0) (stroke (width 0.2) (type default)) (layer "Edge.Cuts") (uuid "2ee48539-4605-434e-a3c1-636efc8faec3"))
-  (gr_text "PCB PSU LED — PCB2-PCB-03R2" (at 3 3) (layer "F.SilkS")
+  (gr_text "PCB PSU LED — PCB2-PCB-03R3" (at 3 3) (layer "F.SilkS")
     (uuid "5b98e205-847c-489c-8ed6-638077d7760a")
     (effects (font (size 1 1) (thickness 0.15)) (justify left))
   )
-  (gr_text "2L FR4 1.6mm | Cu 70um / 2oz | ROUTED REV A" (at 3 5.5) (layer "F.SilkS")
+  (gr_text "2L FR4 1.6mm | Cu 70um / 2oz | PCB2-PCB-03R3" (at 20 5.5) (layer "F.SilkS")
     (uuid "839248d5-e3ad-4d6b-a905-956358ba7dc9")
     (effects (font (size 0.9 0.9) (thickness 0.12)) (justify left))
   )
