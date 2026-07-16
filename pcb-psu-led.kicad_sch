@@ -6,9 +6,9 @@
   (paper "A4")
   (title_block
   (title "PCB PSU LED")
-  (rev "PCB2-ECAD-02")
+  (rev "PCB2-ECAD-03")
   (company "Custom Step-Down PSU 230 V to 100 V")
-  (comment 1 "C2 and C3 100nF X7R regulator decoupling added")
+  (comment 1 "R1, RV1 rheostat and J2 panel LED output added")
 )
 (lib_symbols
   (symbol "PSU_LED:Conn_01x02"
@@ -870,6 +870,270 @@
       )
     )
   )
+  (symbol "PSU_LED:R_Axial"
+    (pin_names (offset 1.016) (hide yes))
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (in_pos_files yes)
+    (duplicate_pin_numbers_are_jumpers no)
+    (property "Reference" "R"
+      (at 0 2.54 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "R_Axial"
+      (at 0 -2.54 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Datasheet" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Description" "THT axial fixed resistor"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Manufacturer" "TBD"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "MPN" "TBD"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "ki_keywords" "resistor axial THT current limit"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (symbol "R_Axial_1_1"
+      (rectangle
+        (start -2.54 1.016)
+        (end 2.54 -1.016)
+        (stroke (width 0.254) (type default))
+        (fill (type none))
+      )
+      (pin passive line
+        (at -5.08 0 0)
+        (length 2.54)
+        (name "1" (effects (font (size 1.27 1.27))))
+        (number "1" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at 5.08 0 180)
+        (length 2.54)
+        (name "2" (effects (font (size 1.27 1.27))))
+        (number "2" (effects (font (size 1.27 1.27))))
+      )
+    )
+  )
+  (symbol "PSU_LED:RV_3386P"
+    (pin_names (offset 1.016) (hide yes))
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (in_pos_files yes)
+    (duplicate_pin_numbers_are_jumpers no)
+    (property "Reference" "RV"
+      (at 0 3.81 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "RV_3386P"
+      (at 0 -3.81 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Datasheet" "https://www.bourns.com/pdfs/3386.pdf"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Description" "Bourns 3386P 5 kohm THT trimming potentiometer used as rheostat"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Manufacturer" "Bourns"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "MPN" "3386P-1-502LF"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "ki_keywords" "potentiometer trimmer rheostat Bourns 3386P 5k"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (symbol "RV_3386P_0_1"
+      (rectangle
+        (start -2.54 1.016)
+        (end 2.54 -1.016)
+        (stroke (width 0.254) (type default))
+        (fill (type none))
+      )
+      (polyline
+        (pts (xy 0 -3.048) (xy 0 -1.27))
+        (stroke (width 0.254) (type default))
+        (fill (type none))
+      )
+      (polyline
+        (pts (xy -0.762 -2.032) (xy 0 -1.27) (xy 0.762 -2.032))
+        (stroke (width 0.254) (type default))
+        (fill (type none))
+      )
+    )
+    (symbol "RV_3386P_1_1"
+      (pin passive line
+        (at 5.08 0 180)
+        (length 2.54)
+        (name "CCW" (effects (font (size 1.27 1.27))))
+        (number "1" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at 0 -5.08 90)
+        (length 2.032)
+        (name "WIPER" (effects (font (size 1.27 1.27))))
+        (number "2" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at -5.08 0 0)
+        (length 2.54)
+        (name "CW" (effects (font (size 1.27 1.27))))
+        (number "3" (effects (font (size 1.27 1.27))))
+      )
+    )
+  )
+  (symbol "PSU_LED:LED_Output_2Pin"
+    (pin_names (offset 1.016) (hide yes))
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (in_pos_files yes)
+    (duplicate_pin_numbers_are_jumpers no)
+    (property "Reference" "J"
+      (at 0 3.81 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "LED PANEL OUT"
+      (at 0 -3.81 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Datasheet" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Description" "Two-pin PCB output connector to panel-mounted Kingbright WP7113ED LED; pin 1 anode, pin 2 cathode"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Manufacturer" "TBD"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "MPN" "TBD"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "ki_keywords" "connector LED panel output anode cathode"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects (font (size 1.27 1.27)))
+    )
+    (symbol "LED_Output_2Pin_1_1"
+      (rectangle
+        (start -1.27 2.54)
+        (end 1.27 -2.54)
+        (stroke (width 0.254) (type default))
+        (fill (type background))
+      )
+      (pin passive line
+        (at -5.08 1.27 0)
+        (length 3.81)
+        (name "ANODE" (effects (font (size 1.27 1.27))))
+        (number "1" (effects (font (size 1.27 1.27))))
+      )
+      (pin passive line
+        (at -5.08 -1.27 0)
+        (length 3.81)
+        (name "CATHODE" (effects (font (size 1.27 1.27))))
+        (number "2" (effects (font (size 1.27 1.27))))
+      )
+    )
+  )
   )
   (wire
     (pts (xy 77.47 100.33) (xy 83.82 100.33))
@@ -1052,6 +1316,59 @@
       (font (size 1.27 1.27))
     )
     (uuid "550ca850-baa3-4968-8877-94cda9fb2a21")
+  )
+  (wire
+    (pts (xy 177.8 93.98) (xy 177.8 101.6))
+    (stroke (width 0) (type default))
+    (uuid "b7e17586-1e77-43fc-a27f-1d4610927ceb")
+  )
+  (wire
+    (pts (xy 187.96 93.98) (xy 190.5 93.98))
+    (stroke (width 0) (type default))
+    (uuid "95d1c3f5-e355-4ba8-9356-eacfa96547c3")
+  )
+  (wire
+    (pts (xy 195.58 88.9) (xy 203.2 88.9))
+    (stroke (width 0) (type default))
+    (uuid "00a445ea-5024-47de-92e6-473ef279e4c3")
+  )
+  (wire
+    (pts (xy 203.2 88.9) (xy 203.2 93.98))
+    (stroke (width 0) (type default))
+    (uuid "fc2a37ad-2bd2-4673-9879-3882192cf0c7")
+  )
+  (wire
+    (pts (xy 200.66 93.98) (xy 203.2 93.98))
+    (stroke (width 0) (type default))
+    (uuid "e0d7b8e8-a60e-4749-aa99-0b3abea5b8a8")
+  )
+  (label "PLUS_5V_LED"
+    (at 177.8 101.6 90)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "42661b50-2725-4e44-b1e0-236960f1fb8c")
+  )
+  (label "LED_ANODE_OUT"
+    (at 203.2 93.98 0)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "33565f90-060c-4b65-970b-2c3794774620")
+  )
+  (label "LED_ANODE_OUT"
+    (at 210.82 100.33 180)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "eb9f6674-92cc-4a17-81b9-1b25a74a8f37")
+  )
+  (label "CT_RAW"
+    (at 210.82 102.87 180)
+    (effects
+      (font (size 1.27 1.27))
+    )
+    (uuid "f551cb32-68e1-45f1-961e-3a4ae48ff701")
   )
   (symbol
     (lib_id "PSU_LED:Conn_01x02")
@@ -1619,6 +1936,225 @@
       (project "pcb-psu-led"
         (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
           (reference "C3")
+          (unit 1)
+        )
+      )
+    )
+  )
+  (symbol
+    (lib_id "PSU_LED:R_Axial")
+    (at 182.88 93.98 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced no)
+    (uuid "7d61fd38-cd7a-4f57-aed6-4432dd00f69e")
+    (property "Reference" "R1"
+      (at 182.88 90.17 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Value" "3.3k 0.25W"
+      (at 182.88 97.79 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Footprint" ""
+      (at 182.88 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Datasheet" ""
+      (at 182.88 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Description" "Fixed series current-limiting resistor for panel LED"
+      (at 182.88 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Manufacturer" "TBD"
+      (at 182.88 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "MPN" "TBD"
+      (at 182.88 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (pin "1"
+      (uuid "4865b225-cb79-49d3-91f7-c01b26b9ad7b")
+    )
+    (pin "2"
+      (uuid "f43c9913-eb75-4011-9dd7-79e69a47447c")
+    )
+    (instances
+      (project "pcb-psu-led"
+        (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
+          (reference "R1")
+          (unit 1)
+        )
+      )
+    )
+  )
+  (symbol
+    (lib_id "PSU_LED:RV_3386P")
+    (at 195.58 93.98 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced no)
+    (uuid "796d7d51-e2b2-4d95-aee9-84209375d45c")
+    (property "Reference" "RV1"
+      (at 195.58 90.17 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Value" "5k Bourns 3386P"
+      (at 195.58 97.79 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Footprint" ""
+      (at 195.58 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Datasheet" "https://www.bourns.com/pdfs/3386.pdf"
+      (at 195.58 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Description" "Bourns 3386P 5 kohm trimmer wired as rheostat; pin 3 input, pins 1 and 2 tied to output"
+      (at 195.58 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Manufacturer" "Bourns"
+      (at 195.58 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "MPN" "3386P-1-502LF"
+      (at 195.58 93.98 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (pin "1"
+      (uuid "c7603a4b-afd4-4009-b268-5f6240d1f9e9")
+    )
+    (pin "2"
+      (uuid "67208893-1769-4450-9a3f-65c19cbb3622")
+    )
+    (pin "3"
+      (uuid "182746e6-f6ae-4d9e-93b4-538dd867e4f1")
+    )
+    (instances
+      (project "pcb-psu-led"
+        (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
+          (reference "RV1")
+          (unit 1)
+        )
+      )
+    )
+  )
+  (symbol
+    (lib_id "PSU_LED:LED_Output_2Pin")
+    (at 215.9 101.6 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced no)
+    (uuid "ed322d42-8a49-4be5-b314-9380327be3d2")
+    (property "Reference" "J2"
+      (at 215.9 97.78999999999999 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Value" "LED PANEL OUT"
+      (at 215.9 105.41 0)
+      (effects
+        (font (size 1.27 1.27))
+      )
+    )
+    (property "Footprint" ""
+      (at 215.9 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Datasheet" ""
+      (at 215.9 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Description" "Two-pin output connector to panel-mounted Kingbright WP7113ED LED; pin 1 anode, pin 2 cathode"
+      (at 215.9 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "Manufacturer" "TBD"
+      (at 215.9 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (property "MPN" "TBD"
+      (at 215.9 101.6 0)
+      (effects
+        (font (size 1.27 1.27))
+        (hide yes)
+      )
+    )
+    (pin "1"
+      (uuid "25698958-3ab1-4428-87b5-9aaf4f8673dd")
+    )
+    (pin "2"
+      (uuid "aacc39ac-71c4-4646-90bd-b6f58f56af4d")
+    )
+    (instances
+      (project "pcb-psu-led"
+        (path "/a08e89e5-29a6-4ee5-b521-7a214388ab56"
+          (reference "J2")
           (unit 1)
         )
       )
