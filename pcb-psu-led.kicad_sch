@@ -1279,7 +1279,7 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "PSU_LED:Fuseholder_Cylinder-5x20mm_Schurter_FUP_0031.2510_Horizontal_Closed"
       (at 88.9 86.36 0)
       (effects
         (font (size 1.27 1.27))
@@ -1351,7 +1351,7 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "PSU_LED:C_Disc_D5.0mm_W2.5mm_P5.00mm"
       (at 146.05 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1423,7 +1423,7 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "PSU_LED:C_Disc_D5.0mm_W2.5mm_P5.00mm"
       (at 173.99 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1495,7 +1495,7 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "PSU_LED:R_Axial_DIN0309_L9.0mm_D3.2mm_P12.70mm_Horizontal"
       (at 182.88 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1567,7 +1567,7 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "PSU_LED:Potentiometer_Bourns_3296W_Vertical"
       (at 198.12 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1642,7 +1642,7 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "PSU_LED:JST_XH_S2B-XH-A_1x02_P2.50mm_Horizontal"
       (at 218.44 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1714,7 +1714,7 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "PSU_LED:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal"
       (at 72.39 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1782,7 +1782,7 @@
       (at 120.65 96.52 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" ""
+    (property "Footprint" "PSU_LED:D_DO-15_P12.70mm_Horizontal"
       (at 120.65 93.98 0)
       (effects
         (font (size 1.27 1.27))
@@ -1850,7 +1850,7 @@
       (at 120.65 111.76 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" ""
+    (property "Footprint" "PSU_LED:D_DO-15_P12.70mm_Horizontal"
       (at 120.65 109.22 0)
       (effects
         (font (size 1.27 1.27))
@@ -1922,7 +1922,7 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "PSU_LED:TO-92_Wide"
       (at 160.02 101.6 0)
       (effects
         (font (size 1.27 1.27))
@@ -1997,7 +1997,7 @@
         (font (size 1.27 1.27))
       )
     )
-    (property "Footprint" ""
+    (property "Footprint" "PSU_LED:CP_Radial_D6.3mm_P2.50mm"
       (at 134.62 101.6 0)
       (effects
         (font (size 1.27 1.27))
