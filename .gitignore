@@ -1,3 +1,6 @@
 erc-local.rpt
 *.rpt
 *.net
+pcb-psu-led.kicad_prl
+*.kicad_prl
+fp-info-cache
