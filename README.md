@@ -4,10 +4,12 @@ Moduł zasilania i sterowania diody LED dla customowego zasilacza step-down 230 
 
 ## Status projektu
 
-- Aktualna rewizja elektryczna: **ECAD-16**
-- Ostatnia rewizja dokumentacji: **DOC-05**
+- Aktualna rewizja elektryczna: **ECAD-19**
+- Ostatnia rewizja dokumentacji: **DOC-07**
 - Schemat: **KOMPLETNY — 12 z 12 pozycji**
+- Footprinty: **KOMPLETNE — 12 z 12 przypisanych, 10 plików w `PSU_LED.pretty/`**
 - Etap 1 (schemat) — **zamknięty**
+- Etap 2 (footprinty) — **zamknięty**
 - ERC bramkujący: **0 errors / 0 warnings**
 - Pełny ERC: **0 errors / 0 warnings**
 - Walidacja: wyłącznie przez **GitHub Actions**
@@ -158,6 +160,33 @@ Warning:              PLUS_5V_LED connected to only one pin
 - ERC bramkujący: `0 errors`
 - pełny ERC: jedno oczekiwane ostrzeżenie dla tymczasowo jednoelementowej sieci `PLUS_5V_LED`
 
+### ECAD-19
+
+- przypisano footprinty do wszystkich 12 pozycji schematu
+- przypisanie **wyłącznie na instancjach** — symbole `R`, `C`, `Fuse`, `Conn_01x02`
+  i pozostałe generyczne zostają bez footprintu, żeby biblioteka nadawała się
+  do kolejnych projektów; `lib_symbols` nietknięte → zero ryzyka `lib_symbol_mismatch`
+- kontrola: każdy przypisany footprint istnieje w `PSU_LED.pretty/`; żaden plik
+  biblioteki nie jest nieużywany
+- kontrola pin↔pad: `F1` 1/2 (dwa pady „2" równolegle + NPTH oprawki),
+  `U1` 1/2/3, `RV1` 1/2/3, reszta 1/2 — wszystkie zgodne z symbolami
+
+### ECAD-18
+
+- `TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal` dla `J1`
+- dwubiegunowy bloczek śrubowy, raster 5.08 mm, przewód do 1.5 mm², pad Ø2.6, wiertło Ø1.3
+- Phoenix COMBICON PC 6 (raster 10.16) **nie istnieje** w bibliotece stockowej —
+  wspólność z `J_IN`/`J_OUT` z ANEKS 8.1 P2-R4.1 niemożliwa
+
+### ECAD-17
+
+- import 8 footprintów ze stockowych bibliotek zamrożonego obrazu `10.0.4`
+- pliki kopiowane bez zmian, weryfikacja bajt w bajt; repo pozostaje samowystarczalne
+- `U1` → `TO-92_Wide`: rozgięcie nóżek do 2.54 daje 1.04 mm przerwy między padami
+  zamiast 0.17 mm; pad 1 prostokątny = pin 1, sito = płaska ścianka (kontrola lustra OK)
+- `F1` → oprawka Schurter FUP **zamknięta** („Shock-Safe"): wymiana bezpiecznika
+  bez dostępu do metalu pod napięciem; koszt — ~45 mm długości sektora sieciowego
+
 ### ECAD-16
 
 - dodano gałąź diody LED: `R1`, `RV1`, `J2` — **schemat kompletny**
@@ -213,28 +242,30 @@ Warning:              PLUS_5V_LED connected to only one pin
 
 ## Następny etap
 
-**Etap 1 zamknięty.** Schemat kompletny, ERC `0 errors / 0 warnings`.
+**Etapy 1 i 2 zamknięte.** Schemat kompletny, footprinty przypisane, ERC `0/0`.
 
-**Etap 2 — footprinty**
-
-Do przypisania pozostaje 12 footprintów. Metoda: kopie plików `.kicad_mod`
-ze stockowych bibliotek obrazu `ghcr.io/kicad/kicad:10.0-full` do `PSU_LED.pretty/`.
-Repo pozostaje samowystarczalne, tabele lokalne, geometria sprawdzona.
-Ręcznie tworzony pozostaje wyłącznie `Talema_70000K` — już zweryfikowany wobec karty.
-
-Uwaga krytyczna: `U1` w obudowie `TO-92` — karta ST rysuje pinout jako **bottom view**,
-a pinout `78L05` jest odwrotny niż `7805`. Patrz `docs/platform.md` §5.2.
-
-Kolejka:
+**Etap 3 — PCB**
 
 ```text
-etap 2    footprinty — kopie stockowe + lokalna Talema
-etap 3    PCB — netclasy MAINS/SELV, mains.kicad_dru, obrys, placement, DRC w CI
-etap 4    dokumentacja produkcyjna
+netclasy MAINS / SELV
+mains.kicad_dru — bariera MAINS <-> SELV >= 6 mm (IEC 62368-1, izolacja wzmocniona)
+obrys i mocowanie
+placement: 230 V z lewej -> 5 V z prawej -> LED; T1 w osi X = 162.50 (Rev. 6.4.1 §2.2)
+routing
+DRC w CI jako bramka
 ```
 
-Pozycje otwarte blokujące etap 3: alokacja X/Y/Z płytki w bazie Valchromat,
-obrys i mocowanie, MPN złącz `J1` i `J2`, obudowa `F1`. Patrz `docs/platform.md` §7.
+## Walidacja lokalna
+
+Repozytorium jest otwierane w GitHub Codespaces. Obraz KiCada jest dostępny przez
+Dockera, więc ERC można uruchomić **przed** commitem:
+
+```bash
+./check.sh
+```
+
+Skrypt używa dokładnie tego samego obrazu i tej samej komendy co CI.
+CI pozostaje bramką — `check.sh` służy do złapania błędu, zanim trafi do historii.
 
 ## Dokumenty źródłowe
 
