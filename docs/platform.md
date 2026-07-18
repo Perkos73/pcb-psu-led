@@ -303,3 +303,46 @@ do `main` **wyłączyłby CI na main po cichu**.
 
 **Uwaga mechaniczna:** 82 g wisi na jednej śrubie M4 wkręconej od spodu w blind insert
 oraz ośmiu pinach 1.0 × 0.5 mm. Płytka wymaga podparcia bezpośrednio przy T1.
+
+---
+
+## 8. MPN-y i footprinty — research zweryfikowany (do DOC-09)
+
+Wszystkie dane potwierdzone na kartach producenta i dystrybutorach (RS, Farnell,
+Mouser, Octopart, TME). Zastępują wcześniejsze przypuszczenia i wymyślony MPN R1.
+
+### 8.1 Pozycje rozstrzygnięte
+
+| Ref | MPN | Kluczowe dane | Źródło |
+|---|---|---|---|
+| R1 | `PR02000206800JA100` | Vishay PR02, 680 Ω, **2 W**, korpus 3.9×12 mm, 500 V | RS 170-1840 |
+| J1 | `1715721` | Phoenix MKDS 1,5/2-5,08, **400 V (III/2)**, 17.5 A, raster 5.08, pin 3.5 | Phoenix, Farnell |
+| J2 | `S2B-XH-A` | JST XH 2-pin, **kątowy (side entry)**, raster 2.5 mm, 250 V/3 A | Newark, Octopart |
+| C1 | `EEUFR1E470` | Panasonic FR, 47 µF/25 V, **Ø5 × 11 mm, raster 2 mm** | Farnell, TME |
+| D1 D2 | `BYV26C-TAP` | Vishay, SOD-57, 600 V/1 A, korpus **Ø3.8 × 4.6 mm**, pasek = katoda | Vishay, Octopart |
+
+### 8.2 R1 — uzasadnienie „zakaz 560 Ω" (było zagadką)
+
+Seria PR02 ma **charakterystykę bezpiecznikową dla wartości < 560 Ω** (Vishay product
+overview). Poniżej 560 Ω rezystor przy przeciążeniu przepala się jak topik. Rev. 6.4.1
+świadomie trzyma 680 Ω, żeby R1 w gałęzi LED zachował się jak rezystor, nie bezpiecznik.
+To decyzja bezpieczeństwa, nie kaprys. Sprzeczność „0,6 W vs seria 2 W" pozorna:
+0,6 W to wymagana rezerwa (realne obciążenie ~0,014 W), PR02 spełnia ją 3.3× nadmiarowo.
+
+### 8.3 Footprinty wymagające korekty (przed layoutem, w Codespace)
+
+Trzy footprinty dobrane w ECAD-17/18 nie w pełni pasują do zweryfikowanych wymiarów:
+
+| Ref | Obecny footprint | Problem | Działanie |
+|---|---|---|---|
+| C1 | `CP_Radial_D6.3mm_P2.50mm` | element to **Ø5, raster 2** — otwory za szeroko | dociągnąć `CP_Radial_D5.0mm_P2.00mm` ze stocku, przepiąć |
+| J1 | `..._P5.08mm_Horizontal` | raster **nóżek** MKDS 1,5 = 3.5 mm vs pozycji 5.08 | zweryfikować pady footprintu w KiCadzie |
+| D1 D2 | `D_DO-15_P12.70mm` | SOD-57 grubszy (Ø3.8) niż DO-15 (Ø2.7) | sito za wąskie; rozważyć `D_DO-201`; montaż OK |
+
+C1 to realny błąd montażowy (nie zmieści się poprawnie) — priorytet.
+J1 i D1/D2 to najpewniej tylko kosmetyka/weryfikacja — element wejdzie.
+
+### 8.4 Konwencja, którą łatwo pomylić
+
+JST XH ma raster **2,5 mm**, nie 2,54. Wizualnie nie do odróżnienia — tylko suwmiarka.
+`S2B` = kątowy, `B2B` = prosty. Dla J2 (kabel wzdłuż frontu do LED) właściwy jest S2B.
