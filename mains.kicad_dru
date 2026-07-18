@@ -1,0 +1,42 @@
+(version 1)
+
+# ============================================================================
+#  PCB PSU LED - reguly bezpieczenstwa sieciowego
+#  Podstawa: IEC 62368-1, izolacja wzmocniona, 230 V robocze,
+#            kat. przepieciowa II, stopien zanieczyszczenia 2, FR-4 grupa IIIa.
+#  Rev. 6.4.1 checklist: creepage 230 V <-> 5 V min. 6 mm.
+#  Klasy sieci zdefiniowane w pcb-psu-led.kicad_pro (MAINS / SELV).
+# ============================================================================
+
+# --- BARIERA IZOLACYJNA: 230 V  <->  strona SELV ---------------------------
+# Wymog nadrzedny. 6 mm z zapasem nad izolacja wzmocniona wg 62368-1.
+(rule "mains_to_selv_reinforced"
+	(constraint clearance (min 6mm))
+	(condition "A.NetClass == 'MAINS' && B.NetClass == 'SELV'"))
+
+# --- ODSTEP MIEDZY SCIEZKAMI SIECIOWYMI ------------------------------------
+# W obrebie sektora 230 V: L <-> N i odgalezienia.
+(rule "mains_internal_clearance"
+	(constraint clearance (min 2.5mm))
+	(condition "A.NetClass == 'MAINS' && B.NetClass == 'MAINS'"))
+
+# --- SZEROKOSC SCIEZEK SIECIOWYCH ------------------------------------------
+# Nie jest to obciazalnosc (7 mA) lecz odpornosc mechaniczna i tolerancja
+# trawienia w sektorze sieciowym. Zero neck-down.
+(rule "mains_min_track"
+	(constraint track_width (min 1mm))
+	(condition "A.NetClass == 'MAINS'"))
+
+# --- ODSTEP OD KRAWEDZI PLYTKI ---------------------------------------------
+# Miedz sieciowa nie moze siegac krawedzi (ryzyko przeskoku po obrysie,
+# uszkodzenia przy frezowaniu).
+(rule "mains_to_edge"
+	(constraint edge_clearance (min 2mm))
+	(condition "A.NetClass == 'MAINS'"))
+
+# --- OTWORY W SEKTORZE SIECIOWYM -------------------------------------------
+# Odstep miedzi MAINS od dowolnego otworu (montaz, NPTH) - separacja od
+# ewentualnych elementow uziemionych (dystanse, srodki mocujace).
+(rule "mains_to_hole"
+	(constraint hole_clearance (min 3mm))
+	(condition "A.NetClass == 'MAINS'"))

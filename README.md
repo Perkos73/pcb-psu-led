@@ -10,6 +10,7 @@ Moduł zasilania i sterowania diody LED dla customowego zasilacza step-down 230 
 - Footprinty: **KOMPLETNE — 12 z 12 przypisanych, 10 plików w `PSU_LED.pretty/`**
 - Etap 1 (schemat) — **zamknięty**
 - Etap 2 (footprinty) — **zamknięty**
+- Etap 3 (PCB) — **w toku**: netclasy i reguły DRC gotowe, layout czeka
 - ERC bramkujący: **0 errors / 0 warnings**
 - Pełny ERC: **0 errors / 0 warnings**
 - Walidacja: wyłącznie przez **GitHub Actions**
@@ -159,6 +160,23 @@ Warning:              PLUS_5V_LED connected to only one pin
 - `VOUT → PLUS_5V_LED`
 - ERC bramkujący: `0 errors`
 - pełny ERC: jedno oczekiwane ostrzeżenie dla tymczasowo jednoelementowej sieci `PLUS_5V_LED`
+
+### ECAD-20
+
+- zdefiniowano klasy sieci w `pcb-psu-led.kicad_pro`:
+  - **MAINS** (`L_SW`, `N_SW`, `L_FUSED`, `PRI_LINK_5_4`): ścieżka min. 1 mm,
+    clearance 0.5 mm, kolor czerwony
+  - **SELV** (`SEC_A`, `SEC_B`, `CT_RAW`, `VRAW_PLUS`, `LED_R`, `LED_A`,
+    `PLUS_5V_LED`): ścieżka 0.5 mm, kolor zielony
+- dodano `mains.kicad_dru` — reguły bezpieczeństwa sieciowego jako maszynowa bramka:
+  - `mains_to_selv_reinforced`: bariera **MAINS ↔ SELV ≥ 6 mm** (IEC 62368-1,
+    izolacja wzmocniona)
+  - `mains_internal_clearance`: L ↔ N ≥ 2.5 mm
+  - `mains_min_track`: ścieżki MAINS ≥ 1 mm, zero neck-down
+  - `mains_to_edge`: miedź MAINS ≥ 2 mm od krawędzi
+  - `mains_to_hole`: miedź MAINS ≥ 3 mm od otworów
+- 6 mm przestaje być zapisem w dokumencie — staje się regułą, przez którą
+  płytka nie przejdzie DRC
 
 ### ECAD-19
 
