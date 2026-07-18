@@ -218,7 +218,64 @@ jobs:
               echo "--- ERC gating report: errors only ---"
               cat /out/erc.rpt
 
-              exit "$rc"
+              if [ "$rc" -ne 0 ]; then
+                exit "$rc"
+              fi
+
+              # --- BOM: kazda pozycja MUSI miec footprint ---
+              # Lapie commit typu "assign footprints" ktory niczego nie przypisal:
+              # ERC tego nie widzi, BOM owszem (regula: zielone CI dowodzi tego o co pytamy).
+              if ! kicad-cli sch export bom \
+                --fields "Reference,Footprint" \
+                --string-delimiter "" \
+                --field-delimiter "|" \
+                --output /out/bom.csv \
+                "$SCH"
+              then
+                echo "BOM export failed."
+                exit 70
+              fi
+
+              echo "--- BOM (Reference|Footprint) ---"
+              cat /out/bom.csv
+
+              # pozycja bez footprintu = linia konczaca sie znakiem | (puste ostatnie pole)
+              missing="$(tail -n +2 /out/bom.csv | grep -c "|$" || true)"
+              if [ "$missing" -gt 0 ]; then
+                echo "Empty Footprint field in $missing BOM row(s):"
+                tail -n +2 /out/bom.csv | grep "|$"
+                exit 70
+              fi
+              echo "--- BOM: wszystkie pozycje maja footprint ---"
+
+              # --- DRC: tylko jesli istnieje .kicad_pcb (warunkowo) ---
+              PCB="pcb-psu-led.kicad_pcb"
+              if [ -s "$PCB" ]; then
+                echo "--- DRC: plytka obecna, uruchamiam ---"
+                set +e
+                kicad-cli pcb drc \
+                  --format report \
+                  --units mm \
+                  --severity-error \
+                  --exit-code-violations \
+                  --output /out/drc.rpt \
+                  "$PCB"
+                drc_rc=$?
+                set -e
+                if [ ! -s /out/drc.rpt ]; then
+                  echo "DRC report was not generated."
+                  exit 72
+                fi
+                echo "--- DRC report: errors only ---"
+                cat /out/drc.rpt
+                if [ "$drc_rc" -ne 0 ]; then
+                  exit 71
+                fi
+              else
+                echo "--- DRC: brak .kicad_pcb, krok pominiety (layout jeszcze nie istnieje) ---"
+              fi
+
+              exit 0
             ' 2>&1 | tee "$RUNNER_TEMP/ci/out/run.log"
 
           status=${PIPESTATUS[0]}
@@ -243,6 +300,15 @@ jobs:
               ;;
             5)
               echo "::error::ERC errors found (exit 5) :: $tail_msg"
+              ;;
+            70)
+              echo "::error::BOM has empty Footprint field (exit 70) :: $tail_msg"
+              ;;
+            71)
+              echo "::error::DRC violations - see drc.rpt (exit 71) :: $tail_msg"
+              ;;
+            72)
+              echo "::error::DRC report not generated (exit 72) :: $tail_msg"
               ;;
             90)
               echo "::error::Missing or empty project input (exit 90) :: $tail_msg"

@@ -161,6 +161,20 @@ Warning:              PLUS_5V_LED connected to only one pin
 - ERC bramkujący: `0 errors`
 - pełny ERC: jedno oczekiwane ostrzeżenie dla tymczasowo jednoelementowej sieci `PLUS_5V_LED`
 
+### CI-04
+
+- rozszerzono `kicad-validate.yml` o dwie bramki, bez zmiany istniejacej logiki ERC:
+  - **kontrola BOM**: `kicad-cli sch export bom` + wykrycie pustego pola `Footprint`
+    → nowy kod wyjscia `70`. To jest bramka, ktora zlapalaby ECAD-19 (commit
+    "assign footprints" przeszedl wtedy na zielono, nie przypisawszy niczego,
+    bo ERC nie widzi footprintow)
+  - **DRC warunkowy**: jesli `pcb-psu-led.kicad_pcb` istnieje →
+    `kicad-cli pcb drc --severity-error` z regulami z `mains.kicad_dru`
+    → kody `71` (naruszenia) / `72` (brak raportu). Dopoki plytki nie ma,
+    krok grzecznie sie pomija
+- bariera 6 mm z ECAD-20 staje sie egzekwowalna automatycznie w momencie,
+  gdy powstanie layout
+
 ### ECAD-20
 
 - zdefiniowano klasy sieci w `pcb-psu-led.kicad_pro`:
